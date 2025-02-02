@@ -5,7 +5,7 @@ function Login() {
 
   return (
     <>
-    <h1>Jack</h1>
+    <div className="test"><h1>"Sonic Strike"</h1></div>
     </>
   )
 }
