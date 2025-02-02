@@ -10,14 +10,21 @@ import Account from "./Pages/Account"
 function Home() {
 
   return (
-    <div>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/search">Search</Link>
-        <Link to="/calendar">Calendar</Link>
-        <Link to="/discover">Discover</Link>
-        <Link to="/account">Account</Link>
-    </div>
+    <html>
+        <head>
+            <div class="Links">
+                <Link to="/">Home</Link>
+                <Link to="/about">About</Link>
+                <Link to="/search">Search</Link>
+                <Link to="/calendar">Calendar</Link>
+                <Link to="/discover">Discover</Link>
+                <Link to="/account">Account</Link>
+            </div>
+        </head>
+        <body>
+            <h1>Home</h1>
+        </body>
+    </html>
   )
 }
 export default Login
