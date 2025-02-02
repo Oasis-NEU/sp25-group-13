@@ -1,11 +1,11 @@
 import './Login.css'
 
-
 function Login() {
+  const [count, setCount] = useState(0)
 
   return (
     <>
-    <div className="test"><h1>"Sonic Strike"</h1></div>
+    <h1>Jack</h1>
     </>
   )
 }
