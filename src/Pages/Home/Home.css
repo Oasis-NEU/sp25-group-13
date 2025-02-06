@@ -1,5 +1,12 @@
+.Links {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  background-color: #eee;
+}
 
-  h1 {
-    color: blue;
-    font-size:xx-large;
-  }
+.Links a {
+  text-decoration: none;
+  color: blue;
+  font-weight: bold;
+}
