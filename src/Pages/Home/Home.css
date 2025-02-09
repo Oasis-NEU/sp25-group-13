@@ -1,0 +1,35 @@
+*  {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.Top {
+  background-color: black;
+}
+.header {
+  color: white;
+  text-align: center;
+  font-size: 30;
+}
+
+.profilebutton {
+  text-align: right;
+  background-color: white;
+  position: absolute;
+  top: 20px;
+  left: 1550px;
+}
+
+.Links {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  background-color: #eee;
+}
+
+.Links a {
+  text-decoration: none;
+  color: blue;
+  font-weight: bold;
+}
