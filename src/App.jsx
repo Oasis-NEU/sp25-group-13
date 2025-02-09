@@ -14,7 +14,7 @@ function App() {
       <hr />
       <Routes>
         {/* Redirect from "/" to "/home" */}
-        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/" element={<Navigate to="/login" />} />
 
         {/* Main Routes */}
         <Route path="/home" element={<Home />} />
