@@ -13,10 +13,18 @@ function Login() {
         <div className="button-container"></div>
         <button onClick={() => setActiveComponent('login-as-artist')}
         className="login-button">Login as Artist</button>
-        <button className="login-button">Login as Listener</button>
+        <button onClick={() => setActiveComponent('login-as-listener')}
+        className="login-button">Login as Listener</button>
+        
         {activeComponent === "login-as-artist" && (
           <div className = "artist-login">
-            <h1>test</h1>
+            <h1>Artist Name</h1>
+          </div>
+        )}
+
+        {activeComponent === "login-as-listener" && (
+          <div className = "listener-login">
+            <h1>Listener Name</h1>
           </div>
         )}
       </div>
