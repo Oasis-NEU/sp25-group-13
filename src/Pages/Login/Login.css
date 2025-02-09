@@ -47,3 +47,25 @@
 .login-button:hover {
     background-color: darkblue;
 }
+
+.Links {
+    background-color:lightblue;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.Links a {
+    color: lightblue; /* Change link color to white */
+    text-decoration: none; /* Remove underline */
+    font-size: 18px; /* Adjust font size */
+    font-weight: bold; /* Make text bold */
+    padding: 8px 12px; /* Add padding for clickable area */
+    border-radius: 5px; /* Slightly rounded corners */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.Links a:hover {
+    background-color: #b4b4b4; /* Darker color on hover */
+}

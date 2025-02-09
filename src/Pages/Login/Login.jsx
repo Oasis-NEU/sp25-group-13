@@ -1,5 +1,6 @@
 import './Login.css'
 import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 
 function Login() {
   const [activeComponent, setActiveComponent] = useState('');
@@ -23,7 +24,7 @@ function Login() {
     </div>
     <div className="login-container">
 
-      <h1 className="login-header">Login</h1>
+      <h1 className="login-header">Login as an Artist or Login as a Listener?</h1>
         <div className="button-container"></div>
         <button onClick={() => setActiveComponent('login-as-artist')}
         className="login-button">Login as Artist</button>
