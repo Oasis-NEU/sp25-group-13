@@ -22,6 +22,7 @@ function Login() {
       <h1>Login Page</h1>
     </div>
     <div className="login-container">
+
       <h1 className="login-header">Login</h1>
         <div className="button-container"></div>
         <button onClick={() => setActiveComponent('login-as-artist')}
@@ -42,6 +43,7 @@ function Login() {
         )}
       </div>
     </div>
+
   )
 }
 
