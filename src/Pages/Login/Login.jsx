@@ -14,8 +14,10 @@ function Login() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  // updates values on submit button press
-  const handleCreateListener = async () => {
+  // updates values on submit button press for listeners
+  const handleCreate = async () => {
+    //assigns the correct database table value to assign the account to
+    const table = activeComponent === "create-listener" ? "Listener Account" : "Artist Account";
     setLoading(true);
     setMessage('');
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -25,34 +27,34 @@ function Login() {
       .from("Listener Account")
       .select("*")
       .eq("contact", contact)
-      .single();
+      .single() || await supabase
+      .from("Artist Account")
+      .select("*")
+      .eq("contact", contact);
     
     // checks for repeat username val
     const { data: usernameRepeat, error: fetchErrorUser } = await supabase
-      .from("Listener Account")
-      .select("*")
-      .eq("username", username)
-      .single();
+    .from("Listener Account")
+    .select("*")
+    .eq("username", username)
+    .single() || await supabase
+    .from("Artist Account")
+    .select("*")
+    .eq("username", username);
 
     // sign up for database if both terms unique, return error message if not
     if (fetchErrorContact && fetchErrorUser) {
-      //email declaration
-      if(contact.includes("@")) {
-        const { data, error} = await supabase.auth.signUp({
-        contact, password});
-      //phone number delcaration
-      } else {
         const { data, error } = await supabase
-         .from('Listener Account')
+         .from(table)
          .insert([{ contact, username, password: hashedPassword }]);
-      }
-      if (error) {
+
+        if (error) {
         setMessage(`Error: ${error.message}`);
-      } else {
+        } else {
         setMessage("Account created successfully!");
         setContact("");
         navigate("/home");
-      }
+        }
     } else if (!fetchErrorUser) {
       setMessage("Username is already taken.");
     } else {
@@ -65,36 +67,35 @@ function Login() {
   const handleLogin = async () => {
     setLoading(true);
     setMessage('');
+    let data = null;
   
-    // login with email
-    if(contact.includes("@")) {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: contact,
-        password: password,
-      });
-
-      if (error) {
-        setMessage("Login failed: " + error.message);
-        setLoading(false);
-        return;
-      }
-    // login with phone #
-    } else {
-      const { data, error } = await supabase
+    //search listener for contact
+    const { data: DataListener, error: ErrorListener } = await supabase
       .from("Listener Account")
       .select("id, contact, password") 
       .eq("contact", contact)
       .single();
 
-      if (error || !data) {
-        setMessage("Phone number not found.");
-        setLoading(false);
-        return;
-      }
-
-      console.log(password)
-      console.log(data.password)
-      console.log(await bcrypt.compare(password, data.password))
+    //checks if found
+    if(!ErrorListener) {
+      data = DataListener;
+    } else {
+      //search listener for contact
+      const { data: DataArtist, error: ErrorArtist } = await supabase
+        .from("Artist Account")
+        .select("id, contact, password") 
+        .eq("contact", contact)
+        .single();
+      
+        //checks if found
+        if(!ErrorArtist) {
+          data = DataArtist
+        } else {
+          setMessage("Phone number/email not found.");
+          setLoading(false);
+          return;
+        }
+    }
 
       // Compare entered password with stored password (hashed)
       const isMatch = await bcrypt.compare(password, data.password);
@@ -103,13 +104,13 @@ function Login() {
         setLoading(false);
         return;
       }
-    }
   
     setMessage("Login successful!");
     navigate("/home");
     setLoading(false);
   };
 
+  
   return (
     <div>
     {/* Navigation Links */}
@@ -173,7 +174,7 @@ function Login() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPass(e.target.value)} />
-              <button onClick={handleCreateListener} disabled={error != ""}>
+              <button onClick={handleCreate} disabled={error != ""}>
                       {loading ? 'Creating...' : 'Create User'}
               </button>
               {message && <p>{message}</p>}
@@ -182,8 +183,23 @@ function Login() {
 
         {activeComponent === "create-artist" && (
           <div className = "artist-create">
-            <h1>Artist Name</h1>
-          </div>
+          <h2>Create Artist</h2>
+            <HandleContact contact={contact} setContact={setContact} setError={setError} />
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)} />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPass(e.target.value)} />
+            <button onClick={handleCreate} disabled={error != ""}>
+                    {loading ? 'Creating...' : 'Create User'}
+            </button>
+            {message && <p>{message}</p>}
+        </div>
         )}
       </div>
     </div>
