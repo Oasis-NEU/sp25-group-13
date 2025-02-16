@@ -1,13 +1,16 @@
-import './Calendar.css'
+import './Calendar.css';
 import { Link } from "react-router-dom";
+import Calendar from 'react-calendar';
+import { useState } from 'react';
 
-function Calendar() {
+function CalendarPage() {
+  const [date, setDate] = useState(new Date());
 
   return (
-    <div>
-    {/* Navigation Links */}
-    <div className="Links">
-    <Link to="/home">Home</Link>
+    <div className="calendar-container">
+      {/* Navigation Links */}
+      <div className="links">
+        <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
@@ -15,14 +18,16 @@ function Calendar() {
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/search">Search</Link>
-    </div>
+      </div>
 
-    {/* Page Content */}
-    <div className="Graphics">
-      <h1>Calendar Page</h1>
+      {/* Page Content */}
+      <div className="calendar-content">
+        <h1>Calendar Page</h1>
+        <Calendar onChange={setDate} value={date} />
+        <p>Selected Date: {date.toDateString()}</p>
+      </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export default Calendar
+export default CalendarPage;
