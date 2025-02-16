@@ -1,13 +1,183 @@
-.Links {
-    display: flex;
-    gap: 15px;
-    padding: 10px;
-    background-color: #eee;
-  }
-  
-  .Links a {
-    text-decoration: none;
-    color: blue;
-    font-weight: bold;
-  }
-  
+/* General styling */
+body {
+  font-family: Georgia, serif;
+  background-color: #e3f2fd; /* Light blue background */
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Navigation Links */
+.links {
+  display: flex;
+  justify-content: center;
+  background-color: #1565c0; /* Deep blue */
+  padding: 10px;
+}
+
+.links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* About Page Content */
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.about-content {
+  max-width: 800px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+/* Team Section */
+.team {
+  margin-top: 30px;
+}
+
+.team-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.member {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 150px;
+}
+
+.member img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.member p {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.member a {
+  display: inline-block;
+  background: #1565c0;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.member a:hover {
+  background: #0d47a1;
+}
+
+/* General styling */
+body {
+  font-family: Georgia, serif;
+  background-color: #e3f2fd; /* Light blue background */
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Navigation Links */
+.links {
+  display: flex;
+  justify-content: center;
+  background-color: #1565c0; /* Deep blue */
+  padding: 10px;
+}
+
+.links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* About Page Content */
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.about-content {
+  max-width: 800px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+/* Team Section */
+.team {
+  margin-top: 30px;
+}
+
+.team-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.member {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 150px;
+}
+
+.member img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.member p {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.member a {
+  display: inline-block;
+  background: #1565c0;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.member a:hover {
+  background: #0d47a1;
+}
