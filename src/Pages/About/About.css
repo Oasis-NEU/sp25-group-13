@@ -10,4 +10,16 @@
     color: blue;
     font-weight: bold;
   }
-  
+
+  .Title {
+    text-align: center;
+    font-size: xx-large;
+  }
+
+  .Line {
+    text-align: center;
+    font-size: medium;
+    font-family:'Lucida Console', Courier, monospace;
+    line-height: 20;
+  }
+

@@ -19,7 +19,9 @@ function About() {
 
       {/* Page Content */}
       <div className="Graphics">
-        <h1>About Page</h1>
+        <h1 className="Title">About Page</h1>
+        <p className="Line">Band4Band is a social media platform for local artists to connect with fans, post about their events, interact with other groups, and show off media with the Artist account!</p>
+        <p className="Line">It allows for fans to connect with artists, find shows near them, leave reviews on shows, and discover new local artists with the Listener account!</p>
       </div>
     </div>
   )
