@@ -34,7 +34,7 @@ function Home() {
 
      {/* Home Feed */}
       <div className="Bottom">
-        <h1>Bottom Feed</h1>
+        <h1>Hello </h1>
       </div>
     </div>
   );

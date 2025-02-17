@@ -8,13 +8,14 @@ import Home from './Pages/Home/Home.jsx';
 import Login from './Pages/Login/Login.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import Search from './Pages/Search/Search.jsx';
+import AuthProvider, { useAuth } from './AuthProvider.jsx';
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <hr />
       <Routes>
-        {/* Redirect from "/" to "/home" */}
+        {/* Redirect from "/" to "/login" */}
         <Route path="/" element={<Navigate to="/login" />} />
 
         {/* Main Routes */}
@@ -27,7 +28,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/search" element={<Search />} />
       </Routes>
-      </>
+      </AuthProvider>
   );
 }
 
