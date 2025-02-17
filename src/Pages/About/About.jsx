@@ -1,13 +1,12 @@
-import './About.css'
+import './About.css';
 import { Link } from "react-router-dom";
 
 function About() {
-
   return (
-    <div>
+    <div className="about-container">
       {/* Navigation Links */}
-      <div className="Links">
-      <Link to="/home">Home</Link>
+      <div className="links">
+        <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
@@ -18,13 +17,30 @@ function About() {
       </div>
 
       {/* Page Content */}
-      <div className="Graphics">
-        <h1 className="Title">About Page</h1>
-        <p className="Line">Band4Band is a social media platform for local artists to connect with fans, post about their events, interact with other groups, and show off media with the Artist account!</p>
-        <p className="Line">It allows for fans to connect with artists, find shows near them, leave reviews on shows, and discover new local artists with the Listener account!</p>
+      <div className="about-content">
+        <h1>About Us</h1>
+        <p>
+          Welcome to Band4Band! We are a group of young software developers with a goal to bring together our community
+          with music. Band4Band was built for all the artists who just like us, are aspiring to do their craft 
+          professionally and need a platform to do that. Welcome to the Band4Band community! - Band4Band Team
+        </p>
+
+        {/* LinkedIn Profiles */}
+        <div className="team">
+          <h2>Meet the Team</h2>
+          <div className="team-grid">
+            <div className="member">
+              <p>Shelby Snyder</p>
+              <a href="https://www.linkedin.com/in/shelby-snyder-277a94268" target="_blank" rel="noopener noreferrer">
+  LinkedIn
+</a>
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default About
+export default About;
