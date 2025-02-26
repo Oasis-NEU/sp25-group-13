@@ -1,35 +1,98 @@
-*  {
+/* Reset Styles */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.Top {
-  background-color: black;
+/* Home Container */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #d4f1f4;
+  min-height: 100vh;
 }
-.header {
+
+/* Banner */
+.banner {
+  width: 100%;
+  height: 200px;
+  background-color: #05445e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-name {
   color: white;
-  text-align: center;
-  font-size: 30;
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
-.profilebutton {
-  text-align: right;
-  background-color: white;
+/* Profile Button (Top Right) */
+.profile-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   position: absolute;
   top: 20px;
-  left: 1550px;
+  right: 20px;
+  border: 2px solid white;
 }
 
-.Links {
+/* Navigation Bar */
+.nav-bar {
   display: flex;
-  gap: 15px;
-  padding: 10px;
-  background-color: #eee;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #189ab4;
 }
 
-.Links a {
+.nav-bar a {
+  color: white;
   text-decoration: none;
-  color: blue;
   font-weight: bold;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
+}
+
+/* Home Feed */
+.feed {
+  width: 80%;
+  padding: 20px;
+  background-color: white;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #05445e;
+}
+
+/* Post Grid (Instagram-Style) */
+.post-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.post {
+  height: 200px;
+  background-color: #75e6da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #05445e;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
