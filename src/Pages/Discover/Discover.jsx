@@ -1,38 +1,20 @@
-import './Discover.css';
+import React, { useState, useEffect } from 'react';
+import './Discover.css'; // Make sure your CSS file is in the right place
 import { Link } from 'react-router-dom';
 
 function Discover() {
-  // Example list of bands. In a real app, this could be fetched from a database.
-  const bands = [
-    {
-      id: 1,
-      name: 'The Electric Vibes',
-      genre: 'Indie Rock',
-      description: 'An indie rock band with a unique electric sound.',
-      imageUrl: 'https://via.placeholder.com/250',
-    },
-    {
-      id: 2,
-      name: 'The Soul Rebels',
-      genre: 'Jazz Fusion',
-      description: 'A jazz fusion band blending smooth rhythms with wild improvisation.',
-      imageUrl: 'https://via.placeholder.com/250',
-    },
-    {
-      id: 3,
-      name: 'Violet Skies',
-      genre: 'Pop',
-      description: 'A pop band with catchy tunes and vibrant energy.',
-      imageUrl: 'https://via.placeholder.com/250',
-    },
-    {
-      id: 4,
-      name: 'Sunset Rhythms',
-      genre: 'Reggae',
-      description: 'A reggae band bringing warm, laid-back beats.',
-      imageUrl: 'https://via.placeholder.com/250',
-    },
-  ];
+  const [bands, setBands] = useState([]);
+
+  // Example bands data or API call simulation
+  useEffect(() => {
+    // Simulating an API call or static data for now
+    const fetchedBands = [
+      { id: 1, name: "The Rockers", genre: "Rock", image: "path_to_image" },
+      { id: 2, name: "Jazz Masters", genre: "Jazz", image: "path_to_image" },
+      { id: 3, name: "Pop Legends", genre: "Pop", image: "path_to_image" },
+    ];
+    setBands(fetchedBands);
+  }, []);
 
   return (
     <div>
@@ -49,17 +31,15 @@ function Discover() {
       </div>
 
       {/* Discover Page Content */}
-      <div className="discover-container">
-        <h1 className="discover-header">Discover New Bands</h1>
-
+      <div className="discover-content">
+        <h1>Discover New Bands</h1>
         <div className="band-list">
-          {bands.map((band) => (
-            <div key={band.id} className="band-card">
-              <img src={band.imageUrl} alt={band.name} />
-              <h2>{band.name}</h2>
-              <p>{band.genre}</p>
-              <p>{band.description}</p>
-              <button>Follow Band</button>
+          {bands.map(band => (
+            <div key={band.id} className="band-item">
+              <img src={band.image} alt={band.name} className="band-image" />
+              <h3>{band.name}</h3>
+              <p>Genre: {band.genre}</p>
+              <Link to={`/band/${band.id}`} className="view-details">View Details</Link>
             </div>
           ))}
         </div>
