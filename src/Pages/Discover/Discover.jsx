@@ -1,21 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import './Discover.css'; // Make sure your CSS file is in the right place
-import { Link } from 'react-router-dom';
+import './Discover.css'
+import { Link } from "react-router-dom";
 
 function Discover() {
-  const [bands, setBands] = useState([]);
-
-  // Example bands data or API call simulation
-  useEffect(() => {
-    // Simulating an API call or static data for now
-    const fetchedBands = [
-      { id: 1, name: "The Rockers", genre: "Rock", image: "path_to_image" },
-      { id: 2, name: "Jazz Masters", genre: "Jazz", image: "path_to_image" },
-      { id: 3, name: "Pop Legends", genre: "Pop", image: "path_to_image" },
-    ];
-    setBands(fetchedBands);
-  }, []);
-
   return (
     <div>
       {/* Navigation Links */}
@@ -30,22 +16,30 @@ function Discover() {
         <Link to="/search">Search</Link>
       </div>
 
-      {/* Discover Page Content */}
-      <div className="discover-content">
+      {/* Page Content */}
+      <div className="Graphics">
         <h1>Discover New Bands</h1>
+        <p>Explore local musicians and find new bands near you!</p>
+        
+        {/* Example of Band List */}
         <div className="band-list">
-          {bands.map(band => (
-            <div key={band.id} className="band-item">
-              <img src={band.image} alt={band.name} className="band-image" />
-              <h3>{band.name}</h3>
-              <p>Genre: {band.genre}</p>
-              <Link to={`/band/${band.id}`} className="view-details">View Details</Link>
-            </div>
-          ))}
+          <div className="band-card">
+            <h3>Band Name 1</h3>
+            <p>Genre: Rock</p>
+            <p>Location: Boston</p>
+            <button>Follow</button>
+          </div>
+          <div className="band-card">
+            <h3>Band Name 2</h3>
+            <p>Genre: Jazz</p>
+            <p>Location: New York</p>
+            <button>Follow</button>
+          </div>
+          {/* Add more band cards */}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default Discover;
