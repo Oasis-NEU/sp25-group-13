@@ -51,7 +51,7 @@ function About() {
             </a>
           </div>
           <div className="member">
-            <p>Collin Quigly</p>
+            <p>Colin Quigley</p>
             <a href="https://www.linkedin.com/in/colin-quigley-845a44330/" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
