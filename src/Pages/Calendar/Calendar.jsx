@@ -16,8 +16,13 @@ function CalendarPage() {
   });
   return (
     <div className="calendar-container">
+      {/* Banner */}
+      <div className="banner">
+        <h1 className="company-name">Band4Band</h1>
+      </div>
+
       {/* Navigation Links */}
-      <div className="links">
+      <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
@@ -28,14 +33,15 @@ function CalendarPage() {
         <Link to="/search">Search</Link>
       </div>
 
-      {/* Page Content */}
+      {/* Calendar Content */}
       <div className="calendar-content">
-        <h1>Calendar Page</h1>
-        <Calendar onChange={setDate} value={date} />
-        <p>Selected Date: {date.toDateString()}</p>
+        <h2 className="calendar-title">Calendar</h2>
+
+        {/* React Calendar Component */}
+        <ReactCalendar />
       </div>
     </div>
   );
 }
 
-export default CalendarPage;
+export default Calendar;
