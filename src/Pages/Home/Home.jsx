@@ -16,7 +16,7 @@ function Home() {
   return (
     <div className="home-container">
       {/* Banner Section */}
-      <div className="banner">
+       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
 
@@ -39,6 +39,7 @@ function Home() {
      {/* Home Feed */}
       <div className="Middle">
         <h1>Hello, {user?.username} </h1>
+      </div>
       {/* Home Feed (Instagram-Style Grid) */}
       <div className="feed">
         <h2>Explore Posts</h2>
