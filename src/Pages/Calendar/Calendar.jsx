@@ -18,7 +18,7 @@ function CalendarPage() {
   return (
     <div className="calendar-container">
       {/* Navigation Links */}
-      <div className="links">
+      <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
