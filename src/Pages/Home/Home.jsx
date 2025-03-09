@@ -1,8 +1,18 @@
-import "./Home.css";
-import { Link } from "react-router-dom";
+
+import './Home.css';
+import { Link, useNavigate } from "react-router-dom";
 import profile from "../../assets/emptyprofile.jpg";
+import { useAuth } from '../../AuthProvider.jsx';
+import { useEffect } from 'react';
 
 function Home() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div className="home-container">
       {/* Banner Section */}
@@ -26,6 +36,9 @@ function Home() {
         <Link to="/search">Search</Link>
       </nav>
 
+     {/* Home Feed */}
+      <div className="Middle">
+        <h1>Hello, {user?.username} </h1>
       {/* Home Feed (Instagram-Style Grid) */}
       <div className="feed">
         <h2>Explore Posts</h2>

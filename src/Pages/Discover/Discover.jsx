@@ -1,5 +1,8 @@
-import './Discover.css';
-import { Link } from 'react-router-dom';
+
+import './Discover.css'
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../../AuthProvider.jsx';
+import { useEffect } from 'react';
 import profile from '../../assets/emptyprofile.jpg'; // Reuse profile image from Home
 
 function Discover() {
@@ -34,7 +37,13 @@ function Discover() {
       image: 'https://via.placeholder.com/200',
     },
   ];
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div className="discover-container">
       {/* Banner (reused from Home/About) */}

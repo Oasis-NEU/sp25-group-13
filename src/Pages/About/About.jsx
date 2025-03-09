@@ -1,7 +1,17 @@
-import "./About.css";
-import { Link } from "react-router-dom";
+import './About.css';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../../AuthProvider.jsx';
+import { useEffect } from 'react';
+
 
 function About() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div className="about-container">
       {/* Banner Section */}

@@ -8,7 +8,7 @@ import Home from './Pages/Home/Home.jsx';
 import Login from './Pages/Login/Login.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import Search from './Pages/Search/Search.jsx';
-import AuthProvider, { useAuth } from './AuthProvider.jsx';
+import AuthProvider from './AuthProvider.jsx';
 
 function App() {
   return (

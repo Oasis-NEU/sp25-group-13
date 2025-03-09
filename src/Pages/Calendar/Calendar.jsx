@@ -1,9 +1,19 @@
 import './Calendar.css';
-import { Link } from "react-router-dom";
-import ReactCalendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; // Import React Calendar styles
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../../AuthProvider.jsx';
+import Calendar from 'react-calendar';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-function Calendar() {
+function CalendarPage() {
+  const [date, setDate] = useState(new Date());
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div className="calendar-container">
       {/* Banner */}
