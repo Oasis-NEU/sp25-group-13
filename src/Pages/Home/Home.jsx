@@ -12,6 +12,7 @@ function Home() {
     if (user == null) {
       navigate("/login");
     }
+    console.log("Picture link:" + user?.profile_picture);
   });
   return (
     <div className="home-container">
@@ -22,7 +23,7 @@ function Home() {
 
       {/* Profile Button (Top Right) */}
       <Link to="/profile">
-        <img src={profile} alt="Profile" className="profile-button" />
+        <img src={user?.profile_picture} alt="Profile" className="profile-button" />
       </Link>
 
       {/* Navigation Bar */}
