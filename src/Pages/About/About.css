@@ -53,7 +53,7 @@
 
 /* About Content */
 .about-content {
-  width: 80%;
+  width: 90%;
   background-color: white;
   padding: 20px;
   margin-top: 20px;
@@ -75,7 +75,7 @@ p {
 
 /* Team Section */
 .team {
-  width: 80%;
+  width: 90%;
   background-color: white;
   padding: 20px;
   margin-top: 20px;
@@ -92,7 +92,7 @@ p {
 /* Team Grid */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
   justify-content: center;
   align-items: center;
@@ -100,12 +100,15 @@ p {
 
 /* Individual Team Member */
 .member {
+  width: 190px;
+  height: 100px;
   background-color: #75e6da;
   padding: 20px;
   text-align: center;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .member p {
   font-size: 1.2rem;

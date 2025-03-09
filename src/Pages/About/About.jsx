@@ -56,6 +56,30 @@ function About() {
               LinkedIn
             </a>
           </div>
+          <div className="member">
+            <p>Jack Senders</p>
+            <a href="https://www.linkedin.com/in/jack-senders-4b6525119/" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+          </div>
+          <div className="member">
+            <p>Joseph Odetayo</p>
+            <a href="https://www.linkedin.com/in/joseph-odetayo-35273b22a/" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+          </div>
+          <div className="member">
+            <p>Sophia Bovino</p>
+            <a href="https://www.linkedin.com/in/sophia-bovino-aa797b1b6/" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+          </div>
+          <div className="member">
+            <p>Hector Batista</p>
+            <a href="https://www.linkedin.com/in/hectorbatistajr/" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+          </div>
         </div>
       </div>
     </div>
