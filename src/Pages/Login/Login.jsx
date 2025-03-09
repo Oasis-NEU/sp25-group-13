@@ -3,6 +3,7 @@ import { Link, useNavigate  } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from '../../supabaseClient';
 import bcrypt from 'bcryptjs';
+import { useAuth } from '../../AuthProvider.jsx';
 
 function Login() {
   const [activeComponent, setActiveComponent] = useState('');
@@ -13,6 +14,7 @@ function Login() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const {setUser} = useAuth();
 
   // updates values on submit button press for listeners
   const handleCreate = async () => {
@@ -24,44 +26,44 @@ function Login() {
 
     // checks for repeat contact val
     const { data: contactRepeat, error: fetchErrorContact } = await supabase
-      .from("Listener Account")
-      .select("*")
+      .from(table)
+      .select("id")
       .eq("contact", contact)
-      .single() || await supabase
-      .from("Artist Account")
-      .select("*")
-      .eq("contact", contact);
+      .single() 
     
     // checks for repeat username val
     const { data: usernameRepeat, error: fetchErrorUser } = await supabase
-    .from("Listener Account")
-    .select("*")
+    .from(table)
+    .select("id")
     .eq("username", username)
-    .single() || await supabase
-    .from("Artist Account")
-    .select("*")
-    .eq("username", username);
+    .single()
 
     // sign up for database if both terms unique, return error message if not
-    if (fetchErrorContact && fetchErrorUser) {
-        const { data, error } = await supabase
-         .from(table)
-         .insert([{ contact, username, password: hashedPassword }]);
-
-        if (error) {
-        setMessage(`Error: ${error.message}`);
-        } else {
-        setMessage("Account created successfully!");
-        setContact("");
-        navigate("/home");
-        }
+    if (!fetchErrorContact) {
+      setMessage("This phone number/email is already registered.");
+      setLoading(false);
+      return;
     } else if (!fetchErrorUser) {
       setMessage("Username is already taken.");
+      setLoading(false);
+      return;
     } else {
-      setMessage("This phone number/email is already registered.");
-    }
+      const { data, error } = await supabase
+        .from(table)
+        .insert([{ contact, username, password: hashedPassword }]);
 
-    setLoading(false);
+        if (error) {
+          setMessage(`Error: ${error.message}`);
+        } else {
+          setMessage("Account created successfully!");
+          setUser({
+            id: data.id,
+            contact: data.contact,
+            username: data.username
+          });
+          navigate("/home");
+        }
+    } 
   };
 
   const handleLogin = async () => {
@@ -106,6 +108,11 @@ function Login() {
       }
   
     setMessage("Login successful!");
+    setUser({
+      id: data.id,
+      contact: data.contact,
+      username: data.username
+    });
     navigate("/home");
     setLoading(false);
   };

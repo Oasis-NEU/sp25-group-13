@@ -13,31 +13,34 @@ export const AuthProvider = ({ children }) => {
       const loggedInUser = session?.session?.user;
 
       if (loggedInUser) {
-        // Fetch user row from Supabase database
+        // Fetch user row from Supabase database, assuming it matches id
         const { data, error } = await supabase
-          .from("Listener Account") // Adjust table name if needed
-          .select("*")
-          .eq("id", loggedInUser.id) // Ensure this matches your Supabase user ID field
+          .from("Listener Account")
+          .select("id, contact, password, username")
+          .eq("id", loggedInUser.id)
           .single();
-
+        // sets tags for each field for later reference
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          setUser(data); // Store user row in state
+          setUser(
+            id = data.id,
+            contact = data.contact,
+            password = data.password,
+            username = data.username
+          );
         }
       } else {
         setUser(null);
       }
-
       setLoading(false);
     };
-
     fetchUser();
 
     // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        setUser(session.user);
+        fetchUser();
       } else {
         setUser(null);
       }
@@ -54,6 +57,7 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 
 // Custom Hook to use Auth Context
 export const useAuth = () => {

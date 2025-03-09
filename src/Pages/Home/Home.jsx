@@ -1,6 +1,7 @@
 import './Home.css';
 import { Link } from "react-router-dom";
 import profile from "../../assets/emptyprofile.jpg";
+import { useAuth } from '../../AuthProvider.jsx';
 
 const TopStyle = {
   display: "flex",
@@ -12,6 +13,8 @@ const TopStyle = {
 }
 
 function Home() {
+  const { user } = useAuth(); 
+  console.log("User in home", user);
   return (
     <div>
       {/* Header and Profile Button */}
@@ -34,7 +37,7 @@ function Home() {
 
      {/* Home Feed */}
       <div className="Bottom">
-        <h1>Hello </h1>
+        <h1>Hello, {user?.username} </h1>
       </div>
     </div>
   );
