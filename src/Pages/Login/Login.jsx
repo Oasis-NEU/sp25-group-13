@@ -59,7 +59,8 @@ function Login() {
           setUser({
             id: data.id,
             contact: data.contact,
-            username: data.username
+            username: data.username,
+            profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"
           });
           navigate("/home");
         }

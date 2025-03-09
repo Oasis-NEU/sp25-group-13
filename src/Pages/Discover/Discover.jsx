@@ -1,8 +1,16 @@
 import './Discover.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../../AuthProvider.jsx';
+import { useEffect } from 'react';
 
 function Discover() {
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div>
     {/* Navigation Links */}

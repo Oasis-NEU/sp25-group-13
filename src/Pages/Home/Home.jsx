@@ -1,7 +1,8 @@
 import './Home.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import profile from "../../assets/emptyprofile.jpg";
 import { useAuth } from '../../AuthProvider.jsx';
+import { useEffect } from 'react';
 
 const TopStyle = {
   display: "flex",
@@ -13,14 +14,20 @@ const TopStyle = {
 }
 
 function Home() {
-  const { user } = useAuth(); 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  });
   return (
     <div>
       {/* Header and Profile Button */}
       <div class="Top" style={TopStyle}>
         <h1 className="header">Band4Band</h1>
         <Link className="profilebutton" to="/profile">
-        <img src={profile} alt="Go to Profile" width="100" /></Link>
+        <img src={user?.profile_picture} alt="Go to Profile" width="100" /></Link>
       </div>
 
       {/* Navigation Links */}
