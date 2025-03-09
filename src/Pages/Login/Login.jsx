@@ -74,7 +74,7 @@ function Login() {
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
       .from("Listener Account")
-      .select("id, contact, password") 
+      .select("id, contact, password, username") 
       .eq("contact", contact)
       .single();
 
@@ -82,10 +82,10 @@ function Login() {
     if(!ErrorListener) {
       data = DataListener;
     } else {
-      //search listener for contact
+      //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password") 
+        .select("id, contact, password, username") 
         .eq("contact", contact)
         .single();
       

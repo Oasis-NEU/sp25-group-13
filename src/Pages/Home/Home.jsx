@@ -14,7 +14,6 @@ const TopStyle = {
 
 function Home() {
   const { user } = useAuth(); 
-  console.log("User in home", user);
   return (
     <div>
       {/* Header and Profile Button */}
