@@ -37,10 +37,7 @@ function Home() {
         <Link to="/search">Search</Link>
       </nav>
 
-     {/* Home Feed */}
-      <div className="Middle">
-        <h1>Hello, {user?.username} </h1>
-      </div>
+    
       {/* Home Feed (Instagram-Style Grid) */}
       <div className="feed">
         <h2>Explore Posts</h2>
