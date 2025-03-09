@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
+
   const { user } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -16,13 +17,8 @@ function CalendarPage() {
   });
   return (
     <div className="calendar-container">
-      {/* Banner */}
-      <div className="banner">
-        <h1 className="company-name">Band4Band</h1>
-      </div>
-
       {/* Navigation Links */}
-      <div className="nav-bar">
+      <div className="links">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
@@ -32,16 +28,14 @@ function CalendarPage() {
         <Link to="/profile">Profile</Link>
         <Link to="/search">Search</Link>
       </div>
-
-      {/* Calendar Content */}
+      {/* Page Content */}
       <div className="calendar-content">
-        <h2 className="calendar-title">Calendar</h2>
-
-        {/* React Calendar Component */}
-        <ReactCalendar />
+        <h1>Calendar Page</h1>
+        <Calendar onChange={setDate} value={date} />
+        <p>Selected Date: {date.toDateString()}</p>
       </div>
     </div>
   );
 }
 
-export default Calendar;
+export default CalendarPage;
