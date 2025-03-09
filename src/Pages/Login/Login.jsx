@@ -151,66 +151,80 @@ function Login() {
         className="login-button">Create Artist</button>
         
         {activeComponent === "login" && (
-          <div className = "login">
-            <h1>Login</h1>
+          <div className="login">
+          <h1>Login</h1>
+          <div className="login-form">  {/* This wrapper ensures centering */}
             <input
               type="text"
               placeholder="Email or Phone Number"
               value={contact}
-              onChange={(e) => setContact(e.target.value)} />
+              onChange={(e) => setContact(e.target.value)}
+            />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPass(e.target.value)} />
-            <button onClick={handleLogin} disabled={error != ""}>
-                      {loading ? 'Logging you in...' : 'Login'}
+              onChange={(e) => setPass(e.target.value)}
+            />
+            <button onClick={handleLogin} disabled={error !== ""}>
+              {loading ? "Logging you in..." : "Login"}
             </button>
             {message && <p>{message}</p>}
           </div>
-        )}
-
-        {activeComponent === "create-listener" && (
-          <div className = "listener-create">
-            <h2>Create Listener</h2>
-              <HandleContact contact={contact} setContact={setContact} setError={setError} />
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)} />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPass(e.target.value)} />
-              <button onClick={handleCreate} disabled={error != ""}>
-                      {loading ? 'Creating...' : 'Create User'}
-              </button>
-              {message && <p>{message}</p>}
-          </div>
-        )}
-
-        {activeComponent === "create-artist" && (
-          <div className = "artist-create">
-          <h2>Create Artist</h2>
-            <HandleContact contact={contact} setContact={setContact} setError={setError} />
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPass(e.target.value)} />
-            <button onClick={handleCreate} disabled={error != ""}>
-                    {loading ? 'Creating...' : 'Create User'}
-            </button>
-            {message && <p>{message}</p>}
         </div>
+        
         )}
+
+{activeComponent === "create-listener" && (
+  <div className="create-container">
+    <h2>Create Listener Account</h2>
+    <div className="create-form">
+      <HandleContact contact={contact} setContact={setContact} setError={setError} />
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPass(e.target.value)}
+      />
+      <button onClick={handleCreate} disabled={error !== ""}>
+        {loading ? "Creating..." : "Create Account"}
+      </button>
+      {message && <p>{message}</p>}
+    </div>
+  </div>
+)}
+
+{activeComponent === "create-artist" && (
+  <div className="create-container">
+    <h2>Create Artist Account</h2>
+    <div className="create-form">
+      <HandleContact contact={contact} setContact={setContact} setError={setError} />
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPass(e.target.value)}
+      />
+      <button onClick={handleCreate} disabled={error !== ""}>
+        {loading ? "Creating..." : "Create Account"}
+      </button>
+      {message && <p>{message}</p>}
+    </div>
+  </div>
+)}
+
       </div>
     </div>
 

@@ -34,6 +34,7 @@
 }
 
 .login-button {
+    width: 500px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: blue;
@@ -69,3 +70,133 @@
 .Links a:hover {
     background-color: #b4b4b4; /* Darker color on hover */
 }
+
+/* Center the whole login container */
+.login, .listener-create, .artist-create {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh; /* Keeps the form centered even if the screen is tall */
+}
+
+/* Style the form container */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px; /* Limits the width of the form */
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Make the inputs and buttons full width */
+.login-form input,
+.login-form button {
+  width: 100%; /* Make the inputs take full width of container */
+  padding: 10px;
+  margin: 10px 0; /* Adds space between inputs */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Center the text */
+h1 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Style the button */
+.login-form button {
+  background-color: #189ab4;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #05445e;
+}
+
+/* Center both Create and Login sections */
+.login,
+.create-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centers everything horizontally */
+  justify-content: center;  /* Centers everything vertically */
+  height: 100vh; /* Full height of screen */
+}
+
+/* Shared Form Styling for Login & Create Account */
+.login-form,
+.create-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centers form elements */
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;  /* Keeps form width balanced */
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input and button styles for both forms */
+.login-form input,
+.create-form input,
+.login-form button,
+.create-form button {
+  width: 100%; /* Makes them stretch to fill the form width */
+  max-width: 300px; /* Prevents them from being too wide */
+  padding: 10px;
+  margin: 10px 0; /* Adds space between elements */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Center the headings */
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #05445e;
+}
+
+/* Button Styling */
+.login-form button,
+.create-form button {
+  background-color: #189ab4;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.login-form button:hover,
+.create-form button:hover {
+  background-color: #05445e;
+}
+
+/* Message Styling */
+p {
+  text-align: center;
+  color: #05445e;
+  font-size: 1rem;
+}
+
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensures vertical centering */
+  }
+  
