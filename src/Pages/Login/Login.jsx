@@ -50,7 +50,7 @@ function Login() {
     } else {
       const { data, error } = await supabase
         .from(table)
-        .insert([{ contact, username, password: hashedPassword }]);
+        .insert([{ contact, username, password: hashedPassword, profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"}]);
 
         if (error) {
           setMessage(`Error: ${error.message}`);
@@ -60,7 +60,7 @@ function Login() {
             id: data.id,
             contact: data.contact,
             username: data.username,
-            profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"
+            profile_picture: data.profile_picture
           });
           navigate("/home");
         }
@@ -75,7 +75,7 @@ function Login() {
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
       .from("Listener Account")
-      .select("id, contact, password, username") 
+      .select("id, contact, password, username, profile_picture") 
       .eq("contact", contact)
       .single();
 
@@ -86,7 +86,7 @@ function Login() {
       //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username") 
+        .select("id, contact, password, username, profile_picture") 
         .eq("contact", contact)
         .single();
       
@@ -112,7 +112,9 @@ function Login() {
     setUser({
       id: data.id,
       contact: data.contact,
-      username: data.username
+      username: data.username,
+      password: data.password,
+      profile_picture: data.profile_picture
     });
     navigate("/home");
     setLoading(false);
