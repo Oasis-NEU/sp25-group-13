@@ -50,7 +50,10 @@ function Login() {
     } else {
       const { data, error } = await supabase
         .from(table)
-        .insert([{ contact, username, password: hashedPassword, profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"}]);
+        .insert([{ contact, 
+          username, 
+          password: hashedPassword, 
+          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"}]);
 
         if (error) {
           setMessage(`Error: ${error.message}`);
@@ -60,7 +63,8 @@ function Login() {
             id: data.id,
             contact: data.contact,
             username: data.username,
-            profile_picture: data.profile_picture
+            profile_picture: data.profile_picture,
+            bio: ""
           });
           navigate("/home");
         }
@@ -71,11 +75,10 @@ function Login() {
     setLoading(true);
     setMessage('');
     let data = null;
-  
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
       .from("Listener Account")
-      .select("id, contact, password, username, profile_picture") 
+      .select("id, contact, password, username, profile_picture, bio, artist") 
       .eq("contact", contact)
       .single();
 
@@ -86,7 +89,7 @@ function Login() {
       //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture") 
+        .select("id, contact, password, username, profile_picture, bio, artist") 
         .eq("contact", contact)
         .single();
       
@@ -114,7 +117,8 @@ function Login() {
       contact: data.contact,
       username: data.username,
       password: data.password,
-      profile_picture: data.profile_picture
+      profile_picture: data.profile_picture,
+      bio: data.bio
     });
     navigate("/home");
     setLoading(false);
@@ -164,7 +168,7 @@ function Login() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPass(e.target.value)}
+              onChange={(e) => setPass(e.target.value.toString())}
             />
             <button onClick={handleLogin} disabled={error !== ""}>
               {loading ? "Logging you in..." : "Login"}

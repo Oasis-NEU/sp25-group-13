@@ -12,7 +12,6 @@ function Home() {
     if (user == null) {
       navigate("/login");
     }
-    console.log("Picture link:" + user?.profile_picture);
   });
   return (
     <div className="home-container">

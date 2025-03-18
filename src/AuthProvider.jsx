@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         // Fetch user row from Supabase database, assuming it matches id
         const { data, error } = await supabase
           .from("Listener Account")
-          .select("id, contact, password, username, profile_picture")
+          .select("id, contact, password, username, profile_picture, bio")
           .eq("id", loggedInUser.id)
           .single();
         // sets tags for each field for later reference
@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
             contact = data.contact,
             password = data.password,
             username = data.username,
-            profile_picture = data.profile_picture
+            profile_picture = data.profile_picture,
+            bio = data.bio
           );
         }
       } else {
