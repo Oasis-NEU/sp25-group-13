@@ -1,8 +1,7 @@
-
 import './Discover.css'
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import profile from '../../assets/emptyprofile.jpg'; // Reuse profile image from Home
 
 function Discover() {
@@ -37,13 +36,26 @@ function Discover() {
       image: 'https://via.placeholder.com/200',
     },
   ];
+
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // State to track the follow status of each band
+  const [followedBands, setFollowedBands] = useState({});
+
   useEffect(() => {
     if (user == null) {
       navigate("/login");
     }
-  });
+  }, [user, navigate]);
+
+  const handleFollow = (bandId) => {
+    setFollowedBands((prevState) => ({
+      ...prevState,
+      [bandId]: !prevState[bandId], // Toggle follow status
+    }));
+  };
+
   return (
     <div className="discover-container">
       {/* Banner (reused from Home/About) */}
@@ -92,7 +104,16 @@ function Discover() {
               <h3>{band.name}</h3>
               <p>{band.genre}</p>
               <p>Rating: {band.rating}</p>
-              <button>Follow</button>
+              <button
+                onClick={() => handleFollow(band.id)}
+                style={{
+                  backgroundColor: followedBands[band.id] ? '#75e6da' : '#05445e',
+                  borderColor: followedBands[band.id] ? 'white' : '#05445e', // White border when followed
+                  color: followedBands[band.id] ? '#05445e' : 'white', // Text color change
+                }}
+              >
+                {followedBands[band.id] ? 'Following' : 'Follow'}
+              </button>
             </div>
           ))}
         </div>
