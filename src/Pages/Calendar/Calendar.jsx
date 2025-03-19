@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import Calendar from 'react-calendar';
 import { useState, useEffect } from 'react';
+import { supabase } from '../../supabaseClient';
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
   
@@ -18,8 +20,16 @@ function CalendarPage() {
       navigate("/login");
     } else {
       console.log("✅ User loaded:", user);
+      setLoading(true);
+      getEvents();
     }
-  }, [user, navigate]);
+  }, [user, navigate, date]);
+
+  const uploadEvent = async() => {
+    const { data, error } = await supabase
+      .from("Event")
+      .insert([{ date: date, artists: [user?.id], title: eventTitle }]);
+  };
 
   const handleAddEvent = () => {
     if (!eventTitle.trim()) return;
@@ -31,9 +41,29 @@ function CalendarPage() {
     setEvents([...events, newEvent]);
     setEventTitle('');
     setShowEventForm(false);
+    uploadEvent();
   };
 
-  const eventsForSelectedDate = events.filter(event => event.date === date.toDateString());
+  const getEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("Event")
+        .select('*')
+        .order('date', { ascending: true });
+
+      if (error) throw error;
+      const filteredEvents = data.filter(event => {
+        const eventDate = new Date(event.date);
+        const eventDateString = eventDate.toISOString().split('T')[0];
+        return eventDateString === date.toISOString().split('T')[0]; 
+      });
+      setEvents(filteredEvents);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="calendar-container">
@@ -53,7 +83,7 @@ function CalendarPage() {
       <div className="calendar-content">
         <h1>Calendar Page</h1>
         <Calendar onChange={setDate} value={date} />
-        <p>Selected Date: {date.toDateString()}</p>
+        <p>Selected Date: {date ? date.toDateString() : "No Date"}</p>
 
         {/* Temporary Bypass for Testing */}
         {user?.artist && (  // Force showing the button to test!
@@ -92,11 +122,11 @@ function CalendarPage() {
         {/* Events Display */}
         <div style={{ marginTop: '20px' }}>
           <h2>Events on {date.toDateString()}</h2>
-          {eventsForSelectedDate.length === 0 ? (
+          {events.length === 0 ? (
             <p>No events yet.</p>
           ) : (
             <ul>
-              {eventsForSelectedDate.map(event => (
+              {events.map(event => (
                 <li key={event.id}>{event.title}</li>
               ))}
             </ul>
