@@ -13,6 +13,7 @@
   align-items: center;
   background-color: #d4f1f4;
   min-height: 100vh;
+  width: 100%;
 }
 
 /* Banner */
@@ -89,13 +90,13 @@ p {
   margin-bottom: 20px;
 }
 
-/* Team Grid */
+/* Team Grid (Flexbox) */
 .team-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
 
 /* Individual Team Member */
@@ -107,8 +108,8 @@ p {
   text-align: center;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  flex: 1 1 190px; /* Make items flexible */
 }
-
 
 .member p {
   font-size: 1.2rem;
@@ -127,3 +128,44 @@ p {
   text-decoration: underline;
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+  /* Stack team members vertically */
+  .team-grid {
+    justify-content: center;
+  }
+
+  .member {
+    width: 100%;
+    height: auto;
+    flex: 1 1 100%; /* Stack vertically */
+  }
+}
+
+@media (max-width: 480px) {
+  .team-grid {
+    justify-content: center;
+  }
+
+  .member {
+    width: 100%; /* Full-width for small screens */
+  }
+
+  .banner {
+    height: 150px; /* Reduce banner height on small screens */
+  }
+
+  .company-name {
+    font-size: 2rem; /* Adjust font size for smaller screens */
+  }
+  
+  .nav-bar {
+    flex-direction: column; /* Stack nav items vertically */
+    gap: 10px;
+  }
+
+  .about-content {
+    width: 100%;
+    padding: 15px; /* Reduce padding on smaller screens */
+  }
+}

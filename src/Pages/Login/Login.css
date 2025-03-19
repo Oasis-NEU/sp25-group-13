@@ -8,7 +8,7 @@
   
   .Links a {
     text-decoration: none;
-    color: blue;
+    color: #189ab4;
     font-weight: bold;
   }
 
@@ -37,7 +37,7 @@
     width: 500px;
     padding: 10px 20px;
     font-size: 16px;
-    background-color: blue;
+    background-color: #189ab4;
     color:white;
     border: none;
     border-radius: 5px;
@@ -46,7 +46,7 @@
 }
 
 .login-button:hover {
-    background-color: darkblue;
+    background-color: #05445e;
 }
 
 .Links {

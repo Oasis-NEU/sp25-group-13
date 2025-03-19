@@ -1,4 +1,4 @@
-import './Discover.css'
+import './Discover.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';
@@ -42,6 +42,9 @@ function Discover() {
 
   // State to track the follow status of each band
   const [followedBands, setFollowedBands] = useState({});
+  // State for search query and selected genre filter
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('all');
 
   useEffect(() => {
     if (user == null) {
@@ -55,6 +58,21 @@ function Discover() {
       [bandId]: !prevState[bandId], // Toggle follow status
     }));
   };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value.toLowerCase()); // Update search query state
+  };
+
+  const handleGenreChange = (e) => {
+    setSelectedGenre(e.target.value); // Update selected genre state
+  };
+
+  // Filter bands based on search query and genre selection
+  const filteredBands = bands.filter((band) => {
+    const matchesSearch = band.name.toLowerCase().includes(searchQuery);
+    const matchesGenre = selectedGenre === 'all' || band.genre.toLowerCase() === selectedGenre.toLowerCase();
+    return matchesSearch && matchesGenre;
+  });
 
   return (
     <div className="discover-container">
@@ -86,8 +104,13 @@ function Discover() {
 
         {/* Filters/Search Bar */}
         <div className="filters">
-          <input type="text" placeholder="Search bands..." />
-          <select>
+          <input 
+            type="text" 
+            placeholder="Search bands..." 
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <select onChange={handleGenreChange} value={selectedGenre}>
             <option value="all">All Genres</option>
             <option value="rock">Rock</option>
             <option value="jazz">Jazz</option>
@@ -98,17 +121,19 @@ function Discover() {
 
         {/* Band Grid */}
         <div className="band-grid">
-          {bands.map((band) => (
+          {filteredBands.map((band) => (
             <div key={band.id} className="band-card">
-              <img src={band.image} alt={band.name} />
-              <h3>{band.name}</h3>
-              <p>{band.genre}</p>
-              <p>Rating: {band.rating}</p>
+              <Link to={`/band/${band.id}`} className="band-link">
+                <img src={band.image} alt={band.name} />
+                <h3>{band.name}</h3>
+                <p>{band.genre}</p>
+                <p>Rating: {band.rating}</p>
+              </Link>
               <button
                 onClick={() => handleFollow(band.id)}
                 style={{
-                  backgroundColor: followedBands[band.id] ? '#75e6da' : '#05445e',
-                  borderColor: followedBands[band.id] ? 'white' : '#05445e', // White border when followed
+                  backgroundColor: followedBands[band.id] ? '#a8e9f0' : '#05445e',
+                  borderColor: followedBands[band.id] ? '#a8e9f0' : '#05445e', // White border when followed
                   color: followedBands[band.id] ? '#05445e' : 'white', // Text color change
                 }}
               >

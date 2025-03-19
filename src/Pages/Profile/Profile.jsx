@@ -4,9 +4,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../supabaseClient';
 import './Profile.css';
 
-
 function Profile() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();  // Get logout from AuthProvider
   const navigate = useNavigate();
   const [aboutText, setAboutText] = useState("");
   const [image, setImage] = useState(null);
@@ -29,7 +28,7 @@ function Profile() {
     }
   }, [user, navigate]);
 
-//updates bio when button is pressed
+  //updates bio when button is pressed
   const updateBio = async () => {
     if (aboutText) {
       setUploading(true);
@@ -43,7 +42,7 @@ function Profile() {
     setUploading(false);
   }
 
-//sets image to the uploaded file
+  //sets image to the uploaded file
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -51,7 +50,7 @@ function Profile() {
     }
   }
 
-//uploads file to database
+  //uploads file to database
   const uploadImage = async () => {
     if (image) {
       try {
@@ -100,20 +99,14 @@ function Profile() {
      }
     };
 
+  // Handle logout (logout will be called from AuthProvider)
+  const handleLogout = async () => {
+    await logout();  // Call logout from AuthProvider
+    navigate("/login");  // Navigate to login page after logout
+  };
+
   return (
     <div className="profile-container">
-      {/* Navigation Links */}
-      <div className="Links">
-        <Link to="/home">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
-        <Link to="/calendar">Calendar</Link>
-        <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
-      </div>
-
       {/* Profile Content */}
       <div className="profile-content">
         <img className="profile-pic" src={user?.profile_picture} alt="Profile" />
@@ -129,6 +122,18 @@ function Profile() {
         />
 
         <button className="button" onClick={updateBio}>Save</button>
+
+        {/* Logout Button */}
+        {user && (
+          <button className="button" onClick={handleLogout}>Logout</button>
+        )}
+
+        {/* If user is logged out, show the login button */}
+        {!user && (
+          <Link to="/login">
+            <button className="button">Login</button>
+          </Link>
+        )}
       </div>
     </div>
   );
