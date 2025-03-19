@@ -42,6 +42,17 @@
   border: 2px solid white;
 }
 
+/* post Button (Top Left) */
+.post-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border: 2px solid white;
+}
+
 /* Navigation Bar */
 .nav-bar {
   display: flex;

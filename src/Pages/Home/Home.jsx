@@ -8,17 +8,24 @@ import { useEffect } from 'react';
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const plusSign = "https://cdn-icons-png.flaticon.com/512/7187/7187487.png"
   useEffect(() => {
     if (user == null) {
       navigate("/login");
     }
   });
+  console.log(user?.artist);
   return (
     <div className="home-container">
       {/* Banner Section */}
        <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
+     
+      {/* Post Button (Top Left) */}
+        {user?.artist && <Link to="/post">
+          <img src={plusSign} alt="Post" className="post-button" />
+        </Link>}
 
       {/* Profile Button (Top Right) */}
       <Link to="/profile">

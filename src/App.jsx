@@ -6,6 +6,7 @@ import Calendar from './Pages/Calendar/Calendar.jsx';
 import Discover from './Pages/Discover/Discover.jsx';
 import Home from './Pages/Home/Home.jsx';
 import Login from './Pages/Login/Login.jsx';
+import Post from './Pages/Post/Post.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import Search from './Pages/Search/Search.jsx';
 import AuthProvider from './AuthProvider.jsx';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/post" element={<Post />} />
       </Routes>
       </AuthProvider>
   );

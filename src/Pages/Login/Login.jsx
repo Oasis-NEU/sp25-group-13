@@ -53,7 +53,7 @@ function Login() {
         .insert([{ contact, 
           username, 
           password: hashedPassword, 
-          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/sign/profile.pictures/emptyprofile.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlLnBpY3R1cmVzL2VtcHR5cHJvZmlsZS5qcGciLCJpYXQiOjE3NDE1MzIxNjcsImV4cCI6MTc3MzA2ODE2N30.2qpU5ayK3vNEoAonXzTz0wV-dNTHDa9UksLkkNoIhgA"}]);
+          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg"}]);
 
         if (error) {
           setMessage(`Error: ${error.message}`);
@@ -118,7 +118,8 @@ function Login() {
       username: data.username,
       password: data.password,
       profile_picture: data.profile_picture,
-      bio: data.bio
+      bio: data.bio,
+      artist: data.artist
     });
     navigate("/home");
     setLoading(false);
