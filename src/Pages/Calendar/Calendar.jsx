@@ -11,6 +11,7 @@ function CalendarPage() {
   const [loading, setLoading] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
+  const [eventDate, setEventDate] = useState(new Date());
   
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -26,9 +27,10 @@ function CalendarPage() {
   }, [user, navigate, date]);
 
   const uploadEvent = async() => {
+    const adjustedDate = new Date(eventDate).toISOString(); 
     const { data, error } = await supabase
       .from("Event")
-      .insert([{ date: date, artists: [user?.id], title: eventTitle }]);
+      .insert([{ date: adjustedDate, artists: [user?.id], title: eventTitle }]);
   };
 
   const handleAddEvent = () => {
@@ -54,8 +56,8 @@ function CalendarPage() {
       if (error) throw error;
       const filteredEvents = data.filter(event => {
         const eventDate = new Date(event.date);
-        const eventDateString = eventDate.toISOString().split('T')[0];
-        return eventDateString === date.toISOString().split('T')[0]; 
+        const eventDateString = eventDate.getDate();
+        return eventDateString === date.getDate(); 
       });
       setEvents(filteredEvents);
     } catch (error) {
@@ -107,6 +109,18 @@ function CalendarPage() {
                 border: '1px solid #ccc'
               }}
             />
+            <input
+              type="datetime-local"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              placeholder="Enter Event Time"
+              style={{
+                padding: '8px',
+                marginRight: '10px',
+                borderRadius: '5px',
+                border: '1px solid #ccc'
+              }}
+            />
             <button onClick={handleAddEvent} style={{
               padding: '8px 12px',
               borderRadius: '5px',
@@ -122,15 +136,32 @@ function CalendarPage() {
         {/* Events Display */}
         <div style={{ marginTop: '20px' }}>
           <h2>Events on {date.toDateString()}</h2>
-          {events.length === 0 ? (
-            <p>No events yet.</p>
-          ) : (
-            <ul>
-              {events.map(event => (
-                <li key={event.id}>{event.title}</li>
-              ))}
-            </ul>
-          )}
+            {Array.isArray(events) && events.length > 0 ? (
+               events.map((event) => {
+          const eventDate = new Date(event.date);
+          const whenString = eventDate.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          });
+          return (
+                <div key={event.id} className="event-card">
+                <h3>{event.title}</h3>
+                <p>{event.location}</p>
+                <p>{whenString}</p>
+                <button>View Artists</button>
+                <button>View Attending</button>
+              </div>
+             );
+            })
+              ) :  (
+                <p>No events available.</p>
+              )}
+          
         </div>
       </div>
     </div>

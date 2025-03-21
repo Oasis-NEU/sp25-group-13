@@ -14,7 +14,6 @@ function Home() {
       navigate("/login");
     }
   });
-  console.log(user?.artist);
   return (
     <div className="home-container">
       {/* Banner Section */}

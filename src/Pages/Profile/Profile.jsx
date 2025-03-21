@@ -12,6 +12,28 @@ function Profile() {
   const [image, setImage] = useState(null);
   const [table, setTable] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+//gets events for this artist
+const getEvents = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("Event")
+      .select('*')
+      .order('artists', { ascending: true });
+
+    if (error) throw error;
+    const filteredEvents = data.filter(event => {
+      return event.artists.includes(user?.id); 
+    });
+    setEvents(filteredEvents);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   //checks user is logged in
   useEffect(() => {
@@ -27,7 +49,11 @@ function Profile() {
     } else {
       setAboutText(user?.bio)
     }
+    setEvents(getEvents);
+
   }, [user, navigate]);
+
+  
 
 //updates bio when button is pressed
   const updateBio = async () => {
@@ -127,8 +153,36 @@ function Profile() {
           value={aboutText}
           onChange={(e) => setAboutText(e.target.value)}
         />
-
         <button className="button" onClick={updateBio}>Save</button>
+
+        {/* events display */}
+        <div className="events-section">
+          {Array.isArray(events) && events.length > 0 ? (
+        events.map((event) => {
+          const eventDate = new Date(event.date);
+          const whenString = eventDate.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          });
+          return (
+            <div key={event.id} className="event-card">
+              <h3>{event.title}</h3>
+              <p>{event.location}</p>
+              <p>{whenString}</p>
+              <button>Invite Artists</button>
+              <button>View Attending</button>
+            </div>
+          );
+        })
+          ) :  (
+            <p>No events available.</p>
+          )}
+        </div>
       </div>
     </div>
   );
