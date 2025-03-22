@@ -18,15 +18,32 @@ function Profile() {
 //gets events for this artist
 const getEvents = async () => {
   try {
-    const { data, error } = await supabase
+    let filteredEvents = [];
+    if (user.artist) {
+      const { data, error } = await supabase
       .from("Event")
       .select('*')
       .order('artists', { ascending: true });
 
     if (error) throw error;
-    const filteredEvents = data.filter(event => {
+    console.log("Artist")
+    console.log(data)
+    filteredEvents = data.filter(event => {
       return event.artists.includes(user?.id); 
     });
+    } else {
+      const { data, error } = await supabase
+      .from("Event")
+      .select('*')
+      .order('attending', { ascending: true });
+
+    if (error) throw error;
+    console.log("User: " + data)
+    console.log(data)
+    filteredEvents = data.filter(event => {
+      return event.attending.includes(user?.id); 
+    });
+    }
     setEvents(filteredEvents);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -126,10 +143,37 @@ const getEvents = async () => {
      }
     };
 
+
+    return (
+      <div className="profile-container">
+    
+        {/* Banner Section */}
+        <div className="banner">
+      <h1 className="company-name">Band4Band</h1>
+    </div>
+    
+        {/* Navigation Links */}
+        <div className="nav-bar">
+          <Link to="/home">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/account">Account</Link>
+          <Link to="/calendar">Calendar</Link>
+          <Link to="/discover">Discover</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/profile">Profile</Link>
+          <Link to="/search">Search</Link>
+        </div>
+
   return (
     <div className="profile-container">
+
+      {/* Banner Section */}
+      <div className="banner">
+      <h1 className="company-name">Band4Band</h1>
+    </div>
+
       {/* Navigation Links */}
-      <div className="Links">
+      <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
@@ -137,8 +181,8 @@ const getEvents = async () => {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
       </div>
+>>>>>>> ab49a0665e72132c14a5dc989e11c3ace06ec17d
 
       {/* Profile Content */}
       <div className="profile-content">
@@ -175,7 +219,9 @@ const getEvents = async () => {
               <p>{event.location}</p>
               <p>{whenString}</p>
               <button>Invite Artists</button>
-              <button>View Attending</button>
+              <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>
+                View Event
+              </Link>
             </div>
           );
         })

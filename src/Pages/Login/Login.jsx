@@ -53,7 +53,9 @@ function Login() {
         .insert([{ contact, 
           username, 
           password: hashedPassword, 
-          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg"}]);
+          following: [],
+          followers: [],
+        }]);
 
         if (error) {
           setMessage(`Error: ${error.message}`);
@@ -64,9 +66,9 @@ function Login() {
             contact: data.contact,
             username: data.username,
             profile_picture: data.profile_picture,
-            bio: ""
+            
           });
-          navigate("/home");
+          setActiveComponent('login');
         }
     } 
   };
@@ -77,8 +79,9 @@ function Login() {
     let data = null;
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
-      .from("ListenerAccount")
-      .select("id, contact, password, username, profile_picture, bio, artist") 
+      .from("ListenerAccount"
+      .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
+
       .eq("contact", contact)
       .single();
 
@@ -89,7 +92,7 @@ function Login() {
       //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture, bio, artist") 
+        .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
         .eq("contact", contact)
         .single();
       
@@ -119,7 +122,9 @@ function Login() {
       password: data.password,
       profile_picture: data.profile_picture,
       bio: data.bio,
-      artist: data.artist
+      artist: data.artist,
+      followers: data.followers,
+      following: data.following
     });
     navigate("/home");
     setLoading(false);
@@ -137,7 +142,6 @@ function Login() {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
     </div>
 
     {/* Page Content */}

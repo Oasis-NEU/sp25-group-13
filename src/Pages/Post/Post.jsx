@@ -4,7 +4,7 @@ import { useAuth } from '../../AuthProvider.jsx';
 import { useState, useEffect } from 'react';
 import supabase from '/src/supabaseClient.js';
 
-function Search() {
+function Post() {
   const { user } = useAuth();
   const [bio, setBio] = useState("Add a caption...");
   const [uploading, setUploading] = useState(false);
@@ -131,6 +131,7 @@ function Search() {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
+
         <Link to="/search">Search</Link>
       </div>
 
@@ -144,6 +145,7 @@ function Search() {
             <img key={index} src={url} alt={`Uploaded ${index}`} className="uploaded-image" />
           ))}
         </div>
+
 
         <textarea 
           className="bio-textbox"
@@ -175,4 +177,6 @@ function Search() {
   );
 }
 
-export default Search;
+
+export default Post
+
