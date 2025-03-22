@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';
-import { supabase } from '../../supabaseClient';
+import supabase from '/src/supabaseClient.js';
 import './Profile.css';
 
 
@@ -42,7 +42,7 @@ const getEvents = async () => {
     } else if (user?.artist) {
       setTable("Artist Account")
     } else {
-      setTable("Listener Account")
+      setTable("ListenerAccount")
     }
     if (user?.bio == null) {
       setAboutText("Tell us about yourself...")
