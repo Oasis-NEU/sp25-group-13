@@ -169,7 +169,6 @@ function CalendarPage() {
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
       </div>
 
       {/* Page Content */}
