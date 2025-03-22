@@ -141,7 +141,6 @@ function Login() {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
     </div>
 
     {/* Page Content */}

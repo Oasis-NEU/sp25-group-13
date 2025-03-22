@@ -143,6 +143,7 @@ const getEvents = async () => {
      }
     };
 
+
     return (
       <div className="profile-container">
     
@@ -162,6 +163,20 @@ const getEvents = async () => {
           <Link to="/profile">Profile</Link>
           <Link to="/search">Search</Link>
         </div>
+
+  return (
+    <div className="profile-container">
+      {/* Navigation Links */}
+      <div className="Links">
+        <Link to="/home">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/account">Account</Link>
+        <Link to="/calendar">Calendar</Link>
+        <Link to="/discover">Discover</Link>
+        <Link to="/login">Login</Link>
+        <Link to="/profile">Profile</Link>
+      </div>
+>>>>>>> ab49a0665e72132c14a5dc989e11c3ace06ec17d
 
       {/* Profile Content */}
       <div className="profile-content">
@@ -197,7 +212,6 @@ const getEvents = async () => {
               <h3>{event.title}</h3>
               <p>{event.location}</p>
               <p>{whenString}</p>
-              <button>Invite Artists</button>
               <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>
                 View Event
               </Link>
