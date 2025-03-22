@@ -1,49 +1,55 @@
-
-import './Discover.css'
+import './Discover.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';  // Don't forget to import useState
 import profile from '../../assets/emptyprofile.jpg'; // Reuse profile image from Home
+import { supabase } from '../../supabaseClient.js';
 
 function Discover() {
-  // Sample data for bands
-  const bands = [
-    {
-      id: 1,
-      name: 'The Rockers',
-      genre: 'Rock',
-      rating: '4.5/5',
-      image: 'https://via.placeholder.com/200',
-    },
-    {
-      id: 2,
-      name: 'Jazz Fusion',
-      genre: 'Jazz',
-      rating: '4.2/5',
-      image: 'https://via.placeholder.com/200',
-    },
-    {
-      id: 3,
-      name: 'Pop Beats',
-      genre: 'Pop',
-      rating: '4.7/5',
-      image: 'https://via.placeholder.com/200',
-    },
-    {
-      id: 4,
-      name: 'Indie Vibes',
-      genre: 'Indie',
-      rating: '4.0/5',
-      image: 'https://via.placeholder.com/200',
-    },
+  const genres = [
+    "Pop", "Rock", "Hip Hop", "Jazz", "Classical", "Electronic", "Reggae", 
+    "Country", "Blues", "Soul", "R&B", "Metal", "Punk", "Folk", 
+    "Alternative", "Indie", "Latin", "Disco", "Techno", "House", 
+    "EDM", "Dubstep", "Trance", "Reggaeton", "Ska", "Gospel", 
+    "Funk", "World", "Opera", "Ambient", "Trap", "K-pop", "Synthwave", 
+    "Grunge", "New Wave", "Salsa", "Dancehall", "Progressive Rock", 
+    "Hard Rock", "Gothic", "Electronica", "Ambient", "Bluegrass", 
+    "Tech House", "Psytrance", "Indie Rock", "Post-punk", "Vaporwave"
   ];
+
+  const [artists, setArtists] = useState([]);
+  const [genre, setGenre] = useState("");
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect to login if the user is not authenticated
   useEffect(() => {
     if (user == null) {
       navigate("/login");
     }
-  });
+  }, [user, navigate]);
+
+  // Fetch artists based on selected genre
+  const getArtists = async (genre) => {
+    const { data, error } = await supabase
+      .from("Artist Account")
+      .select("id, username, profile_picture, rating, genres")
+      .contains("genres", [genre]); // Ensure genre is passed as an array
+    
+    if (error) {
+      console.error("Error fetching artists:", error);
+      return;
+    }
+    setArtists(data);  // Update the artists state with fetched data
+  };
+
+  // Fetch artists whenever genre changes
+  useEffect(() => {
+    if (genre) {
+      getArtists(genre);  // Fetch artists for the selected genre
+    }
+  }, [genre]);  // Dependency array ensures the effect runs when genre changes
+
   return (
     <div className="discover-container">
       {/* Banner (reused from Home/About) */}
@@ -75,23 +81,26 @@ function Discover() {
         {/* Filters/Search Bar */}
         <div className="filters">
           <input type="text" placeholder="Search bands..." />
-          <select>
-            <option value="all">All Genres</option>
-            <option value="rock">Rock</option>
-            <option value="jazz">Jazz</option>
-            <option value="pop">Pop</option>
-            <option value="indie">Indie</option>
+          <select onChange={(e) => setGenre(e.target.value)} value={genre}>
+            <option value="">All Genres</option>
+            {genres.map((genreOption) => {
+              return (
+                <option key={genreOption} value={genreOption}>
+                  {genreOption}
+                </option>
+              );
+            })}
           </select>
         </div>
 
         {/* Band Grid */}
         <div className="band-grid">
-          {bands.map((band) => (
-            <div key={band.id} className="band-card">
-              <img src={band.image} alt={band.name} />
-              <h3>{band.name}</h3>
-              <p>{band.genre}</p>
-              <p>Rating: {band.rating}</p>
+          {artists.map((artist) => (
+            <div key={artist.id} className="band-card">
+              <img src={artist.profile_picture || profile} alt={artist.username} />
+              <h3>{artist.username}</h3>
+              <p>{artist.genres.join(", ")}</p> {/* Join genres array into a string */}
+              <p>Rating: {artist.rating}</p>
               <button>Follow</button>
             </div>
           ))}

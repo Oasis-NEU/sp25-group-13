@@ -53,7 +53,7 @@ function Login() {
         .insert([{ contact, 
           username, 
           password: hashedPassword, 
-          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg"}]);
+        }]);
 
         if (error) {
           setMessage(`Error: ${error.message}`);
@@ -64,9 +64,9 @@ function Login() {
             contact: data.contact,
             username: data.username,
             profile_picture: data.profile_picture,
-            bio: ""
+            
           });
-          navigate("/home");
+          setActiveComponent('login');
         }
     } 
   };
