@@ -1,7 +1,7 @@
 import './Login.css'
 import { Link, useNavigate  } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { supabase } from '../../supabaseClient';
+import supabase from '/src/supabaseClient.js';
 import bcrypt from 'bcryptjs';
 import { useAuth } from '../../AuthProvider.jsx';
 
@@ -79,8 +79,9 @@ function Login() {
     let data = null;
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
-      .from("ListenerAccount")
+      .from("ListenerAccount"
       .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
+
       .eq("contact", contact)
       .single();
 
