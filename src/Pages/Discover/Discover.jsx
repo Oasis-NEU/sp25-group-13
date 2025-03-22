@@ -30,24 +30,55 @@ function Discover() {
   }, [user, navigate]);
 
   // Fetch artists based on selected genre
-  const getArtists = async (genre) => {
+  const getArtists = async () => {
+    if (genre == "") {
+      const { data, error } = await supabase
+      .from("Artist Account")
+      .select("*");
+    
+      if (error) {
+        console.error("Error fetching artists:", error);
+        return;
+      }
+      console.log(data);
+      setArtists(data);
+   
+    } else {
+      console.log("only " + genre)
     const { data, error } = await supabase
       .from("Artist Account")
-      .select("id, username, profile_picture, rating, genres")
-      .contains("genres", [genre]); // Ensure genre is passed as an array
+      .select("id, username, profile_picture, genres")
+      .contains("genres", [genre]);
     
     if (error) {
       console.error("Error fetching artists:", error);
       return;
     }
-    setArtists(data);  // Update the artists state with fetched data
+    console.log(data)
+    setArtists(data);
+  }
   };
+
+  const follow = async (artist) => {
+      if (artist) {
+        const { data, error } = await supabase
+          .from("Artist Account")
+          .upsert({ id: artist?.id, followers: [...artist?.followers, user?.id] });
+        if (error) {
+          throw new Error(error.message);
+        }
+        const { data2, error2 } = await supabase
+          .from("ListenerAccount")
+          .upsert({ id: user?.id, following: [...artist?.following, artist?.id] });
+        if (error) {
+          throw new Error(error.message);
+        }
+      }
+  }
 
   // Fetch artists whenever genre changes
   useEffect(() => {
-    if (genre) {
-      getArtists(genre);  // Fetch artists for the selected genre
-    }
+      getArtists();
   }, [genre]);  // Dependency array ensures the effect runs when genre changes
 
   return (
@@ -85,25 +116,31 @@ function Discover() {
             <option value="">All Genres</option>
             {genres.map((genreOption) => {
               return (
-                <option key={genreOption} value={genreOption}>
+                <option value={genreOption}>
                   {genreOption}
                 </option>
               );
             })}
           </select>
         </div>
-
+        
         {/* Band Grid */}
         <div className="band-grid">
-          {artists.map((artist) => (
+        {console.log(user)}
+        {Array.isArray(artists) && artists.length > 0 ? (
+        artists.map((artist) => {
+            return (
             <div key={artist.id} className="band-card">
               <img src={artist.profile_picture || profile} alt={artist.username} />
               <h3>{artist.username}</h3>
-              <p>{artist.genres.join(", ")}</p> {/* Join genres array into a string */}
-              <p>Rating: {artist.rating}</p>
-              <button>Follow</button>
+              <p>{artist.genres}</p>
+              <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
             </div>
-          ))}
+            );
+          })
+            ) :  (
+              <p>No artists found.</p>
+            )}
         </div>
       </div>
     </div>

@@ -106,7 +106,7 @@ function CalendarPage() {
         for (const current of attendees) {
           try {
             const { data: attendee, error: attendeeError } = await supabase
-              .from("Listener Account")
+              .from("ListenerAccount")
               .select("id, profile_picture, username")
               .eq("id", current)
               .single();
