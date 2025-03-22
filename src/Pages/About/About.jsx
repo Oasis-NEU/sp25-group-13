@@ -27,6 +27,7 @@ function About() {
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
+        <Link to="/search">Search</Link>
       </nav>
 
       {/* About Section */}

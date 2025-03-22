@@ -154,6 +154,7 @@ const getEvents = async () => {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
+        <Link to="/search">Search</Link>
       </div>
 
       {/* Profile Content */}
@@ -190,6 +191,7 @@ const getEvents = async () => {
               <h3>{event.title}</h3>
               <p>{event.location}</p>
               <p>{whenString}</p>
+              <button>Invite Artists</button>
               <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>
                 View Event
               </Link>

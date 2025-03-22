@@ -1,9 +1,9 @@
-import './Account.css'
+import './Search.css'
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect } from 'react';
 
-function Account() {
+function Search() {
   const { user } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -13,9 +13,9 @@ function Account() {
   });
   return (
     <div>
-      {/* Navigation Links */}
-      <div className="Links">
-      <Link to="/home">Home</Link>
+    {/* Navigation Links */}
+    <div className="Links">
+        <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
@@ -23,14 +23,14 @@ function Account() {
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/search">Search</Link>
-      </div>
-
-      {/* Page Content */}
-      <div className="Graphics">
-        <h1>Account Page</h1>
-      </div>
     </div>
+
+    {/* Page Content */}
+    <div className="Graphics">
+      <h1>Search Page</h1>
+    </div>
+  </div>
   )
 }
 
-export default Account
+export default Search
