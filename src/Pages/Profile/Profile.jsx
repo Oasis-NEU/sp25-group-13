@@ -143,6 +143,27 @@ const getEvents = async () => {
      }
     };
 
+
+    return (
+      <div className="profile-container">
+    
+        {/* Banner Section */}
+        <div className="banner">
+      <h1 className="company-name">Band4Band</h1>
+    </div>
+    
+        {/* Navigation Links */}
+        <div className="nav-bar">
+          <Link to="/home">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/account">Account</Link>
+          <Link to="/calendar">Calendar</Link>
+          <Link to="/discover">Discover</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/profile">Profile</Link>
+          <Link to="/search">Search</Link>
+        </div>
+
   return (
     <div className="profile-container">
 
@@ -161,6 +182,7 @@ const getEvents = async () => {
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
       </div>
+>>>>>>> ab49a0665e72132c14a5dc989e11c3ace06ec17d
 
       {/* Profile Content */}
       <div className="profile-content">
