@@ -4,19 +4,28 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background-color: #d4f1f4; /* light aqua, same as home background */
+  min-height: 100vh;
 }
 
-.Links {
+/* Nav Bar Matching Home's .nav-bar */
+.nav-bar {
   display: flex;
-  gap: 15px;
-  padding: 10px;
-  background-color: #eee;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #189ab4;
 }
 
-.Links a {
+.nav-bar a {
+  color: white;
   text-decoration: none;
-  color: blue;
   font-weight: bold;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
 }
 
 .profile-content {
@@ -24,13 +33,14 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background: #f9f9f9;
+  background: white; /* same as home feed */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 100%;
   text-align: center;
+  margin-top: 30px;
 }
 
 .profile-pic {
@@ -38,13 +48,14 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #ddd;
+  border: 3px solid #05445e; /* deep navy */
 }
 
 .profile-username {
   font-size: 20px;
   font-weight: bold;
   margin: 10px 0;
+  color: #05445e;
 }
 
 .about-textbox {
@@ -55,34 +66,39 @@
   padding: 10px;
   resize: none;
   font-size: 14px;
+  background-color: #f0f9fb; /* subtle aqua background */
+  color: #05445e;
 }
 
 .button {
   padding: 8px 15px;
-  background-color: blue;
+  background-color: #189ab4; /* main teal */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  font-weight: bold;
 }
 
+.button:hover,
 .save-button:hover {
-  background-color: darkblue;
+  background-color: #05445e; /* deep navy hover */
 }
 
-/* Content Grid (reused from Home page's post-container) */
+/* Events Grid */
 .events-section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
-/* Band Card (reused from About page's member) */
+/* Event Cards (Same as Home posts) */
 .event-card {
-  background-color: #75e6da;
+  background-color: #75e6da; /* cyan-blue */
   padding: 20px;
   text-align: center;
   border-radius: 10px;
@@ -93,9 +109,72 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin: 10px 0;
+  color: #05445e;
 }
 
 .event-card p {
   font-size: 1rem;
   color: #05445e;
+}
+
+.event-card button {
+  margin-top: 10px;
+  background-color: #189ab4;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.event-card button:hover {
+  background-color: #05445e;
+}
+
+.event-card a {
+  display: block;
+  margin-top: 10px;
+  color: #05445e;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.event-card a:hover {
+  text-decoration: underline;
+}
+
+/* Banner */
+.banner {
+  width: 100%;
+  height: 200px;
+  background-color: #05445e; /* deep dark blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-name {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #189ab4;
+}
+
+.nav-bar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
 }
