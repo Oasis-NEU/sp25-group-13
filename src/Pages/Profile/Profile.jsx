@@ -182,7 +182,7 @@ const getEvents = async () => {
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
       </div>
->>>>>>> ab49a0665e72132c14a5dc989e11c3ace06ec17d
+
 
       {/* Profile Content */}
       <div className="profile-content">
@@ -232,6 +232,7 @@ const getEvents = async () => {
       </div>
     </div>
   );
-}
 
-export default Profile;
+
+export default Profile; 
+</div>)}
