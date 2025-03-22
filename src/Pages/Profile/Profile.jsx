@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';
-import supabase from '/src/supabaseClient.js';
+import { supabase } from '../../supabaseClient';
 import './Profile.css';
 
 
@@ -143,27 +143,6 @@ const getEvents = async () => {
      }
     };
 
-
-    return (
-      <div className="profile-container">
-    
-        {/* Banner Section */}
-        <div className="banner">
-      <h1 className="company-name">Band4Band</h1>
-    </div>
-    
-        {/* Navigation Links */}
-        <div className="nav-bar">
-          <Link to="/home">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/account">Account</Link>
-          <Link to="/calendar">Calendar</Link>
-          <Link to="/discover">Discover</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/profile">Profile</Link>
-          <Link to="/search">Search</Link>
-        </div>
-
   return (
     <div className="profile-container">
 
@@ -233,6 +212,5 @@ const getEvents = async () => {
     </div>
   );
 
-
+}
 export default Profile; 
-</div>)}

@@ -1,7 +1,7 @@
 import './Login.css'
 import { Link, useNavigate  } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import supabase from '/src/supabaseClient.js';
+import { supabase } from '../../supabaseClient';
 import bcrypt from 'bcryptjs';
 import { useAuth } from '../../AuthProvider.jsx';
 
@@ -83,7 +83,6 @@ function Login() {
       .from("ListenerAccount")
 
       .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
-
       .eq("contact", contact)
       .single();
 
