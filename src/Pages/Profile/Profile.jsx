@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';
-import supabase from '/src/supabaseClient.js';
+import { supabase } from '../../supabaseClient';
 import './Profile.css';
 
 
