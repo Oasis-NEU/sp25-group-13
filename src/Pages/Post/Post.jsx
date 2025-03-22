@@ -147,6 +147,7 @@ function Post() {
           ))}
         </div>
 
+
         <textarea 
           className="bio-textbox"
           value={bio}

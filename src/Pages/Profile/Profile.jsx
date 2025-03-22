@@ -166,8 +166,14 @@ const getEvents = async () => {
 
   return (
     <div className="profile-container">
+
+      {/* Banner Section */}
+      <div className="banner">
+      <h1 className="company-name">Band4Band</h1>
+    </div>
+
       {/* Navigation Links */}
-      <div className="Links">
+      <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/account">Account</Link>
@@ -212,6 +218,7 @@ const getEvents = async () => {
               <h3>{event.title}</h3>
               <p>{event.location}</p>
               <p>{whenString}</p>
+              <button>Invite Artists</button>
               <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>
                 View Event
               </Link>
