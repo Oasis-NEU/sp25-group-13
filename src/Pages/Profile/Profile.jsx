@@ -59,7 +59,7 @@ const getEvents = async () => {
     } else if (user?.artist) {
       setTable("Artist Account")
     } else {
-      setTable("Listener Account")
+      setTable("ListenerAccount")
     }
     if (user?.bio == null) {
       setAboutText("Tell us about yourself...")

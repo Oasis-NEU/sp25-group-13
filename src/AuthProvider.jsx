@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
       if (loggedInUser) {
         // Fetch user row from Supabase database, assuming it matches id
         const { data, error } = await supabase
-          .from("Listener Account")
+          .from("ListenerAccount")
           .select("id, contact, password, username, profile_picture, bio, artist")
           .eq("id", loggedInUser.id)
           .single();
