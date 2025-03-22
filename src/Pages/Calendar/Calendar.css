@@ -93,3 +93,28 @@
   font-size: 1rem;
   color: #05445e;
 }
+
+.locationContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.locationContainer img {
+  width: 20px;
+  height: 20px;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profileContainer img {
+  border-radius: 50%;
+  border: 2px solid white;
+  width: 40px;
+  height: 40px;
+}
