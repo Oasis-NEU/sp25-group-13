@@ -142,8 +142,6 @@ function CalendarPage() {
         <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
       </div>
 
       {/* Calendar & Event Section */}
