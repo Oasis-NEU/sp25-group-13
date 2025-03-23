@@ -51,7 +51,21 @@ function Login() {
       setLoading(false);
       return;
     } else {
-      const { data, error } = await supabase
+      if (table == "Artist Account") {
+        const { data, error } = await supabase
+        .from(table)
+        .insert([{ contact, 
+          username, 
+          password: hashedPassword, 
+          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg",
+          bio: "",
+          artist: true,
+          following: [],
+          followers: [],
+          genres: []
+        }]);
+      } else {
+        const { data, error } = await supabase
         .from(table)
         .insert([{ contact, 
           username, 
@@ -59,6 +73,8 @@ function Login() {
           following: [],
           followers: [],
         }]);
+      }
+      
 
         if (error) {
           setMessage(`Error: ${error.message}`);
