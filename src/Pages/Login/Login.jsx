@@ -125,7 +125,8 @@ function Login() {
       bio: data.bio,
       artist: data.artist,
       followers: data.followers,
-      following: data.following
+      following: data.following,
+      genres: data.genres
     });
     navigate("/home");
     setLoading(false);

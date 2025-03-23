@@ -5,6 +5,16 @@ import { supabase } from "../../supabaseClient.js";
 import './Profile.css';
 
 function Profile() {
+  const allGenres = [
+    "Pop", "Rock", "Hip Hop", "Jazz", "Classical", "Electronic", "Reggae", 
+    "Country", "Blues", "Soul", "R&B", "Metal", "Punk", "Folk", 
+    "Alternative", "Indie", "Latin", "Disco", "Techno", "House", 
+    "EDM", "Dubstep", "Trance", "Reggaeton", "Ska", "Gospel", 
+    "Funk", "World", "Opera", "Ambient", "Trap", "K-pop", "Synthwave", 
+    "Grunge", "New Wave", "Salsa", "Dancehall", "Progressive Rock", 
+    "Hard Rock", "Gothic", "Electronica", "Ambient", "Bluegrass", 
+    "Tech House", "Psytrance", "Indie Rock", "Post-punk", "Vaporwave"
+  ];
   const { user } = useAuth();
   const navigate = useNavigate();
   const [aboutText, setAboutText] = useState("");
@@ -13,8 +23,8 @@ function Profile() {
   const [uploading, setUploading] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [genre, setGenre] = useState("");
-  const [customGenre, setCustomGenre] = useState("");
+  const [genres, setGenres] = useState([]);
+  const [currentGenre, setCurrentGenre] = useState("");
 
   // Get events for artist or listener
   const getEvents = async () => {
@@ -38,7 +48,6 @@ function Profile() {
         filteredEvents = data.filter(event => event.attending.includes(user?.id));
       }
 
-      console.log(filteredEvents); // optional
       setEvents(filteredEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -56,21 +65,23 @@ function Profile() {
     } else {
       setTable("ListenerAccount");
     }
+    
 
     setAboutText(user?.bio ?? "Tell us about yourself...");
-    if (user?.genre) setGenre(user.genre);
-
-    getEvents();
+  setGenres(user?.genres);
+  getEvents();
+  
   }, [user, navigate]);
 
   // Update bio + genre
   const updateBio = async () => {
     if (aboutText) {
       setUploading(true);
-      const selectedGenre = genre === "Other" ? customGenre : genre;
+      genres.push(currentGenre);
+      console.log(genres)
       const { error } = await supabase
         .from(table)
-        .upsert({ id: user?.id, bio: aboutText, genre: selectedGenre });
+        .upsert({ id: user?.id, bio: aboutText, genres: genres  });
 
       if (error) throw new Error(error.message);
       setUploading(false);
@@ -175,8 +186,8 @@ function Profile() {
           <>
             <select
               className="about-textbox"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
+              value={currentGenre}
+              onChange={(e) => setCurrentGenre(e.target.value)}
             >
               <option value="">Select Genre</option>
               <option value="Rock">Rock</option>
@@ -190,13 +201,13 @@ function Profile() {
               <option value="Other">Other</option>
             </select>
 
-            {genre === "Other" && (
+            {!allGenres.includes(currentGenre) && (
               <input
                 className="about-textbox"
                 type="text"
                 placeholder="Enter your genre"
-                value={customGenre}
-                onChange={(e) => setCustomGenre(e.target.value)}
+                value={currentGenre}
+                onChange={(e) => setCurrentGenre(e.target.value)}
               />
             )}
           </>
