@@ -236,7 +236,7 @@ function Profile() {
 
             {/* Genres Display */}
             <div className="genres-section">
-              <h3>Selected Genres:</h3>
+              <h3>Genres:</h3>
               {genres.length > 0 ? (
                 <ul className="genres-list">
                   {genres.map((genre, index) => (
