@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';
-import { supabase } from '../../supabaseClient';
+import { supabase } from "../../supabaseClient.js";
 import './Profile.css';
 
 function Profile() {
@@ -16,6 +16,7 @@ function Profile() {
   const [genre, setGenre] = useState("");
   const [customGenre, setCustomGenre] = useState("");
 
+  // Get events for artist or listener
   const getEvents = async () => {
     try {
       let filteredEvents = [];
@@ -36,6 +37,8 @@ function Profile() {
         if (error) throw error;
         filteredEvents = data.filter(event => event.attending.includes(user?.id));
       }
+
+      console.log(filteredEvents); // optional
       setEvents(filteredEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -44,6 +47,7 @@ function Profile() {
     }
   };
 
+  // On mount: check login, set bio/genre/table
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -53,76 +57,61 @@ function Profile() {
       setTable("ListenerAccount");
     }
 
-    if (user?.bio == null) {
-      setAboutText("Tell us about yourself...");
-    } else {
-      setAboutText(user?.bio);
-    }
-
-    if (user?.genre) {
-      setGenre(user.genre);
-    }
+    setAboutText(user?.bio ?? "Tell us about yourself...");
+    if (user?.genre) setGenre(user.genre);
 
     setEvents(getEvents);
   }, [user, navigate]);
 
+  // Update bio + genre
   const updateBio = async () => {
     if (aboutText) {
       setUploading(true);
       const selectedGenre = genre === "Other" ? customGenre : genre;
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from(table)
         .upsert({ id: user?.id, bio: aboutText, genre: selectedGenre });
-      if (error) {
-        throw new Error(error.message);
-      }
+
+      if (error) throw new Error(error.message);
+      setUploading(false);
     }
-    setUploading(false);
   };
 
+  // Set file on upload
   const handleUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
+    if (file) setImage(file);
   };
 
+  // Upload image to Supabase
   const uploadImage = async () => {
     if (image) {
       try {
         setUploading(true);
         const fileName = `${Date.now()}_${image.name}`;
 
-        const { uploadData, uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('profilepictures')
           .upload(fileName, image);
 
-        if (uploadError) {
-          console.error("upload error: ", uploadError.message);
-          throw new Error(uploadError.message);
-        }
+        if (uploadError) throw new Error(uploadError.message);
 
         const { publicURL, error: urlError } = supabase
           .storage
           .from('profilepictures')
           .getPublicUrl(fileName);
 
-        if (urlError) {
-          throw urlError;
-        }
+        if (urlError) throw urlError;
 
         const { error: dbError } = await supabase
           .from(table)
           .update({ profile_picture: publicURL })
           .eq('id', user.id);
 
-        if (dbError) {
-          throw dbError;
-        }
+        if (dbError) throw dbError;
 
         alert('Upload successful! Image URL: ' + publicURL);
         setImage(null);
-
       } catch (uploadError) {
         alert('Error uploading file: ' + uploadError.message);
       } finally {
@@ -133,13 +122,12 @@ function Profile() {
 
   return (
     <div className="profile-container">
-
-      {/* Banner Section */}
+      {/* Banner */}
       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
 
-      {/* Navigation Links */}
+      {/* Navigation Bar */}
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
@@ -151,23 +139,23 @@ function Profile() {
         <Link to="/search">Search</Link>
       </div>
 
-      {/* Profile Content */}
+      {/* Profile */}
       <div className="profile-content">
         <img className="profile-pic" src={user?.profile_picture} alt="Profile" />
-        <input type="file" id="imageInput" accept="image/*" onChange={handleUpload} />
+        <input type="file" accept="image/*" onChange={handleUpload} />
         <button className="button" onClick={uploadImage} disabled={uploading}>
-          {uploading ? 'Uploading...' : 'Upload'}
+          {uploading ? "Uploading..." : "Upload"}
         </button>
+
         <h2 className="profile-username">{user?.username || "User Name"}</h2>
 
-        {/* Editable About Section */}
         <textarea
           className="about-textbox"
           value={aboutText}
           onChange={(e) => setAboutText(e.target.value)}
         />
 
-        {/* Genre Selection */}
+        {/* Genre selection for artists */}
         {user?.artist && (
           <>
             <select
@@ -201,7 +189,7 @@ function Profile() {
 
         <button className="button" onClick={updateBio}>Save</button>
 
-        {/* events display */}
+        {/* Events */}
         <div className="events-section">
           {Array.isArray(events) && events.length > 0 ? (
             events.map((event) => {
@@ -236,3 +224,4 @@ function Profile() {
 }
 
 export default Profile;
+

@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import Calendar from 'react-calendar';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../supabaseClient.js';
+
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
@@ -106,7 +107,7 @@ function CalendarPage() {
         for (const current of attendees) {
           try {
             const { data: attendee, error: attendeeError } = await supabase
-              .from("Listener Account")
+              .from("ListenerAccount")
               .select("id, profile_picture, username")
               .eq("id", current)
               .single();
@@ -168,8 +169,8 @@ function CalendarPage() {
         <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
+        <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
       </div>
 
       {/* Page Content */}
@@ -281,7 +282,9 @@ function CalendarPage() {
                     src={account.profile_picture || "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}
                     alt={account.username}
                   />
-                  <p>{account.username}</p>
+                  <Link to={`/account?account=${encodeURIComponent(account.id)}`}>
+                {account.username}
+              </Link>
                 </div>
               </div>
             ))

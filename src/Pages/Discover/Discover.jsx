@@ -4,6 +4,7 @@ import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';  // Don't forget to import useState
 import profile from '../../assets/emptyprofile.jpg'; // Reuse profile image from Home
 import { supabase } from '../../supabaseClient.js';
+import { isAuthError } from '@supabase/supabase-js';
 
 function Discover() {
   const genres = [
@@ -18,7 +19,9 @@ function Discover() {
   ];
 
   const [artists, setArtists] = useState([]);
+  const [displayArtists, setDisplayArtists] = useState([]);
   const [genre, setGenre] = useState("");
+  const [search, setSearch] = useState("");
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -26,29 +29,59 @@ function Discover() {
   useEffect(() => {
     if (user == null) {
       navigate("/login");
+    } else {
+      getArtists();
     }
   }, [user, navigate]);
 
   // Fetch artists based on selected genre
-  const getArtists = async (genre) => {
+  const getArtists = async () => {
     const { data, error } = await supabase
       .from("Artist Account")
-      .select("id, username, profile_picture, rating, genres")
-      .contains("genres", [genre]); // Ensure genre is passed as an array
+      .select("*");
     
-    if (error) {
-      console.error("Error fetching artists:", error);
-      return;
-    }
-    setArtists(data);  // Update the artists state with fetched data
+      if (error) {
+        console.error("Error fetching artists:", error);
+        return;
+      }
+      setDisplayArtists(data);
   };
+
+  const follow = async (artist) => {
+      if (artist) {
+        const { data, error } = await supabase
+          .from("Artist Account")
+          .upsert({ id: artist?.id, followers: [...artist?.followers, user?.id] });
+        if (error) {
+          throw new Error(error.message);
+        }
+        const { data2, error2 } = await supabase
+          .from("ListenerAccount")
+          .upsert({ id: user?.id, following: [...artist?.following, artist?.id] });
+        if (error) {
+          throw new Error(error.message);
+        }
+      }
+  }
 
   // Fetch artists whenever genre changes
   useEffect(() => {
-    if (genre) {
-      getArtists(genre);  // Fetch artists for the selected genre
-    }
-  }, [genre]);  // Dependency array ensures the effect runs when genre changes
+    if (genre == "") {
+    getArtists();
+    } else {
+    const filteredArtists = artists.filter(artist => {
+      return artist.genres.includes(genre);
+    });
+    setDisplayArtists(filteredArtists);
+  }
+  }, [genre]);
+
+  useEffect(() => {
+    const filteredArtists = artists.filter(artist => {
+      return artist.username.toLowerCase().includes(search.toLowerCase());
+    });
+    setDisplayArtists(filteredArtists);
+}, [search]);
 
   return (
     <div className="discover-container">
@@ -71,39 +104,45 @@ function Discover() {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
       </div>
 
       {/* Discover Content */}
       <div className="discover-content">
-        <h2 className="discover-title">Discover Bands</h2>
+        <h2 className="discover-title">Discover Artists</h2>
 
         {/* Filters/Search Bar */}
         <div className="filters">
-          <input type="text" placeholder="Search bands..." />
+          <input id="search" type="text" placeholder="Search artists..." onChange={(e) => setSearch(e.target.value)}/>
           <select onChange={(e) => setGenre(e.target.value)} value={genre}>
             <option value="">All Genres</option>
             {genres.map((genreOption) => {
               return (
-                <option key={genreOption} value={genreOption}>
+                <option value={genreOption}>
                   {genreOption}
                 </option>
               );
             })}
           </select>
         </div>
-
+        
         {/* Band Grid */}
         <div className="band-grid">
-          {artists.map((artist) => (
-            <div key={artist.id} className="band-card">
+        {Array.isArray(displayArtists) && displayArtists.length > 0 ? (
+        displayArtists.map((artist) => {
+            return (
+            <div className="band-card">
               <img src={artist.profile_picture || profile} alt={artist.username} />
-              <h3>{artist.username}</h3>
-              <p>{artist.genres.join(", ")}</p> {/* Join genres array into a string */}
-              <p>Rating: {artist.rating}</p>
-              <button>Follow</button>
+              <Link to={`/account?account=${encodeURIComponent(artist.id)}`}>
+                {artist.username}
+              </Link>
+              <p>{artist.genres}</p>
+              <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
             </div>
-          ))}
+            );
+          })
+            ) :  (
+              <p>No artists found.</p>
+            )}
         </div>
       </div>
     </div>

@@ -1,7 +1,10 @@
 import './Login.css'
 import { Link, useNavigate  } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { supabase } from '../../supabaseClient';
+
+import { supabase } from "../../supabaseClient.js";
+
+
 import bcrypt from 'bcryptjs';
 import { useAuth } from '../../AuthProvider.jsx';
 
@@ -14,12 +17,12 @@ function Login() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const {setUser} = useAuth();
+  const { setUser } = useAuth();
 
   // updates values on submit button press for listeners
   const handleCreate = async () => {
     //assigns the correct database table value to assign the account to
-    const table = activeComponent === "create-listener" ? "Listener Account" : "Artist Account";
+    const table = activeComponent === "create-listener" ? "ListenerAccount" : "Artist Account";
     setLoading(true);
     setMessage('');
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -53,6 +56,8 @@ function Login() {
         .insert([{ contact, 
           username, 
           password: hashedPassword, 
+          following: [],
+          followers: [],
         }]);
 
         if (error) {
@@ -77,8 +82,10 @@ function Login() {
     let data = null;
     //search listener for contact
     const { data: DataListener, error: ErrorListener } = await supabase
-      .from("Listener Account")
-      .select("id, contact, password, username, profile_picture, bio, artist") 
+
+      .from("ListenerAccount")
+
+      .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
       .eq("contact", contact)
       .single();
 
@@ -89,7 +96,7 @@ function Login() {
       //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture, bio, artist") 
+        .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
         .eq("contact", contact)
         .single();
       
@@ -119,7 +126,9 @@ function Login() {
       password: data.password,
       profile_picture: data.profile_picture,
       bio: data.bio,
-      artist: data.artist
+      artist: data.artist,
+      followers: data.followers,
+      following: data.following
     });
     navigate("/home");
     setLoading(false);
@@ -137,7 +146,6 @@ function Login() {
         <Link to="/discover">Discover</Link>
         <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
     </div>
 
     {/* Page Content */}
@@ -146,7 +154,7 @@ function Login() {
     </div>
     <div className="login-container">
 
-      <h1 className="login-header">Login or Create an Artist or Listener Account</h1>
+      <h1 className="login-header">Login or Create an Artist or ListenerAccount</h1>
         <div className="button-container"></div>
         <button onClick={() => setActiveComponent('login')}
         className="login-button">Login</button>
@@ -182,7 +190,7 @@ function Login() {
 
 {activeComponent === "create-listener" && (
   <div className="create-container">
-    <h2>Create Listener Account</h2>
+    <h2>Create ListenerAccount</h2>
     <div className="create-form">
       <HandleContact contact={contact} setContact={setContact} setError={setError} />
       <input
