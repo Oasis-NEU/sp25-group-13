@@ -26,6 +26,7 @@ function Profile() {
   const [uploading, setUploading] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   const [genres, setGenres] = useState([]); // Final selected genres
   const [selectedGenre, setSelectedGenre] = useState(""); // Dropdown value
@@ -64,6 +65,25 @@ function Profile() {
     }
   };
 
+  const getPosts = async () => {
+    try {
+      let filteredPosts = [];
+        const { data, error } = await supabase
+          .from("Post")
+          .select('*')
+          .order('poster', { ascending: true });
+
+        if (error) throw error;
+
+        filteredPosts = data.filter(post => post.poster == user?.id);
+        setPosts(filteredPosts);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // On mount
   useEffect(() => {
     if (!user) {
@@ -75,6 +95,7 @@ function Profile() {
     setAboutText(user?.bio ?? "Tell us about yourself...");
     setGenres(user?.genres || []);
     getEvents();
+    getPosts();
   }, [user, navigate]);
 
   // Handle bio and genres update
@@ -183,8 +204,12 @@ function Profile() {
         <Link to="/about">About</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/profile">Profile</Link>
       </div>
+
+      <Link to="/profile">
+        <img src={user?.profile_picture} alt="Profile" className="profile-button" />
+      </Link>
+
 
       <div className="profile-content">
         <img
@@ -286,8 +311,27 @@ function Profile() {
             <p>No events available.</p>
           )}
         </div>
+
+        {/* Posts */}
+      <div className="feed">
+        <h2>Your Posts</h2>
+        <div className="post-container">
+          {posts.length === 0 ? (
+            <p>No posts yet! Go to the home page to post!.</p>
+          ) : (
+            posts.map((post, index) => (
+              <div key={index} className="post">
+                <p>{post.bio}</p>
+                {post.media && post.media.map((url, idx) => (
+                  <img key={idx} src={url} alt={`Post ${index} Image ${idx}`} style={{ width: "100%", borderRadius: "10px" }} />
+                ))}
+              </div>
+            ))
+          )}
+        </div>
         <button onClick={() => navigate("/login")}>Log Out</button>
     </div>
+  </div>
   );
 }
 

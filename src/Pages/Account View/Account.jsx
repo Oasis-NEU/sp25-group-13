@@ -13,6 +13,7 @@ function Account() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false)
   const [account, setAccount] = useState();
+  const [posts, setPosts] = useState([]);
 
   const location = useLocation();
 
@@ -35,6 +36,7 @@ function Account() {
 
   useEffect(() => {
     getEvents();
+    getPosts();
   }, [account])
 
 //gets events for this artist
@@ -72,6 +74,25 @@ const getEvents = async () => {
   }
 };
 
+const getPosts = async () => {
+  try {
+    let filteredPosts = [];
+      const { data, error } = await supabase
+        .from("Post")
+        .select('*')
+        .order('poster', { ascending: true });
+
+      if (error) throw error;
+
+      filteredPosts = data.filter(post => post.poster == account?.id);
+      setPosts(filteredPosts);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
   //checks user is logged in
   useEffect(() => {
     if (!user) {
@@ -92,13 +113,13 @@ const getEvents = async () => {
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
       </div>
 
+      <Link to="/profile">
+        <img src={user?.profile_picture} alt="Profile" className="profile-button" />
+      </Link>
 
       {/* Profile Content */}
       <div className="profile-content">
@@ -156,6 +177,25 @@ const getEvents = async () => {
               )}
             </div>
       </div>
+
+      {/* Posts */}
+      <div className="feed">
+        <h2>Posts</h2>
+        <div className="post-container">
+          {posts.length === 0 ? (
+            <p>No posts yet!.</p>
+          ) : (
+            posts.map((post, index) => (
+              <div key={index} className="post">
+                <p>{post.bio}</p>
+                {post.media && post.media.map((url, idx) => (
+                  <img key={idx} src={url} alt={`Post ${index} Image ${idx}`} style={{ width: "100%", borderRadius: "10px" }} />
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+    </div>
     </div>
   );
 
