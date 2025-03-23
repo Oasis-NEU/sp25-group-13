@@ -112,7 +112,7 @@ function Login() {
       //search artist for contact
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture, bio, artist, followers, following") 
+        .select("id, contact, password, username, profile_picture, bio, artist, followers, following, genres") 
         .eq("contact", contact)
         .single();
       
@@ -144,7 +144,8 @@ function Login() {
       bio: data.bio,
       artist: data.artist,
       followers: data.followers,
-      following: data.following
+      following: data.following,
+      genres: data.genres
     });
     navigate("/home");
     setLoading(false);
