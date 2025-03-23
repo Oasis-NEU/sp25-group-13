@@ -162,6 +162,7 @@ const getEvents = async () => {
         <Link to="/profile">Profile</Link>
       </div>
 
+
       {/* Profile Content */}
       <div className="profile-content">
         <img className="profile-pic" src={user?.profile_picture} alt="Profile" />
@@ -210,6 +211,6 @@ const getEvents = async () => {
       </div>
     </div>
   );
-}
 
-export default Profile;
+}
+export default Profile; 
