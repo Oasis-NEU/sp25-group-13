@@ -44,6 +44,7 @@ function Discover() {
         console.error("Error fetching artists:", error);
         return;
       }
+      setArtists(data);
       setDisplayArtists(data);
   };
 
@@ -67,10 +68,13 @@ function Discover() {
   // Fetch artists whenever genre changes
   useEffect(() => {
     if (genre == "") {
-    getArtists();
+    setDisplayArtists(artists);
     } else {
+      console.log(artists);
     const filteredArtists = artists.filter(artist => {
-      return artist.genres.includes(genre);
+      if(artist.genres) {
+        return artist.genres.includes(genre);
+      }
     });
     setDisplayArtists(filteredArtists);
   }
@@ -92,7 +96,7 @@ function Discover() {
 
       {/* Profile Button (reused from Home) */}
       <Link to="/profile">
-        <img src={profile} alt="Profile" className="profile-button" />
+        <img src={user?.profile_picture} alt="Profile" className="profile-button" />
       </Link>
 
       {/* Navigation Bar (reused from Home/About) */}
