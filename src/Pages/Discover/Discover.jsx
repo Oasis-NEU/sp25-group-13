@@ -194,7 +194,7 @@ function Discover() {
             return (
             <div className="band-card">
               <img src={artist.profile_picture || profile} alt={artist.username} />
-              <Link to={`/account?account=${encodeURIComponent(artist.id)}`}>
+              <Link to={`/account?account=${encodeURIComponent(artist?.id)}`}>
                 {artist.username}
               </Link>
               {artist.genres ? <p>{artist.genres.join(", ")}</p> : <p></p>}
