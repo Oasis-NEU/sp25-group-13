@@ -49,21 +49,64 @@ function Discover() {
   };
 
   const follow = async (artist) => {
-      if (artist) {
-        const { data, error } = await supabase
-          .from("Artist Account")
-          .upsert({ id: artist?.id, followers: [...artist?.followers, user?.id] });
-        if (error) {
-          throw new Error(error.message);
-        }
-        const { data2, error2 } = await supabase
-          .from("ListenerAccount")
-          .upsert({ id: user?.id, following: [...artist?.following, artist?.id] });
-        if (error) {
-          throw new Error(error.message);
-        }
+    if (!artist || !user) {
+      console.log("Missing artist or user!");
+      return;
+    }
+  
+    console.log(`Trying to follow artist: ${artist.username}`);
+  
+    try {
+      // 1. Get current followers array
+      const { data: artistData, error: artistError } = await supabase
+        .from("Artist Account")
+        .select("followers")
+        .eq("id", artist.id)
+        .single();
+  
+      if (artistError) {
+        console.error("Artist fetch error:", artistError);
+        return;
       }
-  }
+  
+      console.log("Current artist followers:", artistData.followers);
+  
+      const currentFollowers = artistData.followers || [];
+  
+      if (currentFollowers.includes(user.id)) {
+        console.log("You already follow this artist!");
+        return;
+      }
+  
+      // 2. Update followers
+      const updatedFollowers = [...currentFollowers, user.id];
+  
+      const { error: updateArtistError } = await supabase
+        .from("Artist Account")
+        .update({ followers: updatedFollowers })
+        .eq("id", artist.id);
+  
+      if (updateArtistError) {
+        console.error("Update artist followers error:", updateArtistError);
+        return;
+      }
+  
+      console.log(`Successfully followed ${artist.username}!`);
+  
+      // OPTIONAL: Update local state
+      setArtists((prevArtists) =>
+        prevArtists.map((a) =>
+          a.id === artist.id
+            ? { ...a, followers: updatedFollowers }
+            : a
+        )
+      );
+  
+    } catch (err) {
+      console.error("Unexpected error in follow:", err);
+    }
+  };
+  
 
   // Fetch artists whenever genre changes
   useEffect(() => {
