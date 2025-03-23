@@ -249,13 +249,13 @@ function Profile() {
             </div>
           </>
         )}
-
+        
         <button className="button" onClick={updateBio} disabled={uploading}>
           {uploading ? "Saving..." : "Save Profile"}
         </button>
-
-        {/* Events */}
-        <div className="events-section">
+      </div>
+      {/* Events */}
+      <div className="events-section">
           <h3>Your Events</h3>
           {loading ? (
             <p>Loading events...</p>
@@ -286,7 +286,7 @@ function Profile() {
             <p>No events available.</p>
           )}
         </div>
-      </div>
+        <button onClick={() => navigate("/login")}>Log Out</button>
     </div>
   );
 }
