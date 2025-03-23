@@ -1,10 +1,12 @@
+// AuthProvider.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseClient"; // Adjust the import based on your Supabase setup
 
-
+// Create the AuthContext
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+// AuthProvider Component
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,25 +22,26 @@ export const AuthProvider = ({ children }) => {
           .select("id, contact, password, username, profile_picture, bio, artist")
           .eq("id", loggedInUser.id)
           .single();
-        // sets tags for each field for later reference
+
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          setUser(
-            id = data.id,
-            contact = data.contact,
-            password = data.password,
-            username = data.username,
-            profile_picture = data.profile_picture,
-            bio = data.bio,
-            artist = data.artist
-          );
+          setUser({
+            id: data.id,
+            contact: data.contact,
+            password: data.password,
+            username: data.username,
+            profile_picture: data.profile_picture,
+            bio: data.bio,
+            artist: data.artist,
+          });
         }
       } else {
         setUser(null);
       }
       setLoading(false);
     };
+
     fetchUser();
 
     // Listen for auth state changes
@@ -55,17 +58,24 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  // Context value
+  const value = {
+    user,
+    setUser,
+    loading,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <AuthContext.Provider value={value}>
       {loading ? <p>Loading...</p> : children}
     </AuthContext.Provider>
   );
 };
 
-
-// Custom Hook to use Auth Context
+// useAuth Hook
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+// Default export
 export default AuthProvider;

@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import Calendar from 'react-calendar';
 import { useState, useEffect } from 'react';
-import { supabase } from "../../supabaseClient.js";
+import { supabase } from '../../supabaseClient.js';
+
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());

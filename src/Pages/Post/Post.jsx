@@ -2,7 +2,9 @@ import './Post.css'
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useState, useEffect } from 'react';
-import { supabase } from "../../supabaseClient.js";
+
+import { supabase } from '../../supabaseClient.js';
+
 
 function Post() {
   const { user } = useAuth();
@@ -14,7 +16,7 @@ function Post() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user == null) {
-      navigate("/login");
+      navigate("/login");s
     }
   });
 
