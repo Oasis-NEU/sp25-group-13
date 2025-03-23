@@ -1,176 +1,154 @@
-
-.Links {
-    display: flex;
-    gap: 15px;
-    padding: 10px;
-    background-color: #eee;
-  }
-  
-  .Links a {
-    text-decoration: none;
-    color: blue;
-    font-weight: bold;
-  }
-
-.login-header{
-    font-size: 40px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+/* Reset Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
 }
 
-.login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    gap:15px;
-    margin-top: 20px;
-}
-
-.button-container {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-}
-
-.login-button {
-    width: 500px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: blue;
-    color:white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.login-button:hover {
-    background-color: darkblue;
-}
-
-.Links {
-    background-color:lightblue;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.Links a {
-    color: lightblue; /* Change link color to white */
-    text-decoration: none; /* Remove underline */
-    font-size: 18px; /* Adjust font size */
-    font-weight: bold; /* Make text bold */
-    padding: 8px 12px; /* Add padding for clickable area */
-    border-radius: 5px; /* Slightly rounded corners */
-    transition: background-color 0.3s ease-in-out;
-}
-
-.Links a:hover {
-    background-color: #b4b4b4; /* Darker color on hover */
-}
-
-/* Center the whole login container */
-.login, .listener-create, .artist-create {
+/* Page Background */
+.login-page {
+  background: linear-gradient(to bottom right, #d4f1f4, #ffffff);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 60vh; /* Keeps the form centered even if the screen is tall */
+  position: relative;
 }
 
-/* Style the form container */
-.login-form {
+/* Banner */
+.banner {
+  width: 100%;
+  height: 200px;
+  background-color: #05445e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: glitterPop 2s ease-in-out infinite alternate;
+}
+
+@keyframes glitterPop {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+.company-name {
+  color: white;
+  font-size: 2.7rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Nav Bar */
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #189ab4;
+}
+
+.nav-bar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
+  letter-spacing: 1px;
+}
+
+/* Header */
+.login-header {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 30px 0 20px;
+  text-align: center;
+  color: #05445e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Button Row */
+.button-container {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #189ab4;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-transform: uppercase;
+}
+
+.login-button:hover {
+  background-color: #05445e;
+  transform: scale(1.05);
+}
+
+/* Form Container */
+.login-container,
+.create-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 400px; /* Limits the width of the form */
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding-bottom: 40px;
 }
 
-/* Make the inputs and buttons full width */
-.login-form input,
-.login-form button {
-  width: 100%; /* Make the inputs take full width of container */
-  padding: 10px;
-  margin: 10px 0; /* Adds space between inputs */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-/* Center the text */
-h1 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* Style the button */
-.login-form button {
-  background-color: #189ab4;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-}
-
-.login-form button:hover {
-  background-color: #05445e;
-}
-
-/* Center both Create and Login sections */
-.login,
-.create-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* Centers everything horizontally */
-  justify-content: center;  /* Centers everything vertically */
-  height: 100vh; /* Full height of screen */
-}
-
-/* Shared Form Styling for Login & Create Account */
 .login-form,
 .create-form {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Centers form elements */
+  align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 400px;  /* Keeps form width balanced */
-  padding: 20px;
+  max-width: 400px;
+  padding: 30px;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Input and button styles for both forms */
+.login-form:hover,
+.create-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Input & Buttons */
 .login-form input,
 .create-form input,
 .login-form button,
 .create-form button {
-  width: 100%; /* Makes them stretch to fill the form width */
-  max-width: 300px; /* Prevents them from being too wide */
+  width: 100%;
+  max-width: 300px;
   padding: 10px;
-  margin: 10px 0; /* Adds space between elements */
+  margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 25px;
   font-size: 1rem;
-}
-
-/* Center the headings */
-h2 {
   text-align: center;
-  margin-bottom: 15px;
-  color: #05445e;
 }
 
-/* Button Styling */
 .login-form button,
 .create-form button {
   background-color: #189ab4;
@@ -178,11 +156,24 @@ h2 {
   font-weight: bold;
   border: none;
   cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .login-form button:hover,
 .create-form button:hover {
   background-color: #05445e;
+  transform: scale(1.03);
+}
+
+/* Section Headings */
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #05445e;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Message Styling */
@@ -190,13 +181,40 @@ p {
   text-align: center;
   color: #05445e;
   font-size: 1rem;
+  margin-top: 10px;
 }
 
+/* Dead Space Add-on */
+.login-tagline {
+  margin-top: 10px;
+  font-style: italic;
+  font-weight: bold;
+  color: #05445e;
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
 
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ensures vertical centering */
+.emoji-glam {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .login-button {
+    width: 100%;
   }
-  
+  .login-form,
+  .create-form {
+    padding: 20px;
+  }
+}
