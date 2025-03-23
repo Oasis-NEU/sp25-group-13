@@ -182,11 +182,12 @@ function Discover() {
               <Link to={`/account?account=${encodeURIComponent(artist.id)}`}>
                 {artist.username}
               </Link>
-              <p>{artist.genres}</p>
+              {artist.genres ? <p>{artist.genres.join(", ")}</p> : <p></p>}
               <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
             </div>
             );
           })
+          
             ) :  (
               <p>No artists found.</p>
             )}

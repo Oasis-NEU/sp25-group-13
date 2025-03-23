@@ -16,10 +16,11 @@ const AuthProvider = ({ children }) => {
       const loggedInUser = session?.session?.user;
 
       if (loggedInUser) {
+        const table = loggedInUser.artist ? "Artist Account" : "ListenerAccount"
         // Fetch user row from Supabase database, assuming it matches id
         const { data, error } = await supabase
-          .from("ListenerAccount")
-          .select("id, contact, password, username, profile_picture, bio, artist")
+          .from(table)
+          .select("id, contact, password, username, profile_picture, bio, artist, genres")
           .eq("id", loggedInUser.id)
           .single();
 
@@ -34,6 +35,7 @@ const AuthProvider = ({ children }) => {
             profile_picture: data.profile_picture,
             bio: data.bio,
             artist: data.artist,
+            genres: data.genres
           });
         }
       } else {
