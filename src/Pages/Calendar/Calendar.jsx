@@ -4,7 +4,7 @@ import { useAuth } from '../../AuthProvider.jsx';
 import Calendar from 'react-calendar';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../supabaseClient.js';
-
+import profile from "../../assets/emptyprofile.jpg";  // Import default profile image
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
@@ -17,7 +17,7 @@ function CalendarPage() {
   const [show, setShow] = useState(true);
   const [showType, setShowType] = useState('');
   const [eventDisplay, setEventDisplay] = useState([]);
-  
+
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,19 +29,18 @@ function CalendarPage() {
       setDate(new Date(dateParam));
     }
   }, [location]);
-  
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
     } else {
-      console.log("✅ User loaded:", user);
       setLoading(true);
       getEvents();
     }
   }, [user, navigate, date]);
 
-  const uploadEvent = async() => {
-    const adjustedDate = new Date(eventDate).toISOString(); 
+  const uploadEvent = async () => {
+    const adjustedDate = new Date(eventDate).toISOString();
     const { data, error } = await supabase
       .from("Event")
       .insert([{ date: adjustedDate, artists: [user?.id], attending: [], title: eventTitle, location: eventLocation }]);
@@ -70,7 +69,7 @@ function CalendarPage() {
       const filteredEvents = data.filter(event => {
         const eventDate = new Date(event.date);
         const eventDateString = eventDate.getDate();
-        return eventDateString === date.getDate(); 
+        return eventDateString === date.getDate();
       });
       setEvents(filteredEvents);
     } catch (error) {
@@ -80,29 +79,28 @@ function CalendarPage() {
     }
   };
 
-  //switches whether user is attending event
   const switchAttending = async (event) => {
-      let newAttending = event.attending ? event.attending : [];
-      if (event.attending.includes(user?.id)) {
-        newAttending = event.attending.filter(item => item !== user.id);
-      } else {
-        newAttending = [...event.attending, user.id]
-      }
-      const {data, error} = await supabase
-        .from("Event")
-        .upsert({id: event?.id, attending: newAttending})
-      setEvents(events.map((e) =>
-        e.id === event.id ? {...e, attending: newAttending}  : e
-    ));
+    let newAttending = event.attending ? event.attending : [];
+    if (event.attending.includes(user?.id)) {
+      newAttending = event.attending.filter(item => item !== user.id);
+    } else {
+      newAttending = [...event.attending, user.id]
     }
+    const { data, error } = await supabase
+      .from("Event")
+      .upsert({ id: event?.id, attending: newAttending });
+    setEvents(events.map((e) =>
+      e.id === event.id ? { ...e, attending: newAttending } : e
+    ));
+  };
 
-    const viewAttending = async (event) => {
-      setShow(!show)
-      setShowType("Attendees")
-      setEventDisplay([]);
-      if (show) {
+  const viewAttending = async (event) => {
+    setShow(!show);
+    setShowType("Attendees");
+    setEventDisplay([]);
+    if (show) {
       let attendees = event.attending;
-    
+
       if (Array.isArray(attendees) && attendees.length > 0) {
         for (const current of attendees) {
           try {
@@ -111,12 +109,12 @@ function CalendarPage() {
               .select("id, profile_picture, username")
               .eq("id", current)
               .single();
-    
+
             if (attendeeError) {
               console.error("Error fetching attendee:", attendeeError);
               continue;
             }
-    
+
             if (attendee && !eventDisplay.includes(attendee)) {
               setEventDisplay([...eventDisplay, attendee]);
             }
@@ -126,15 +124,15 @@ function CalendarPage() {
         }
       }
     }
-    };
+  };
 
-    const viewPerforming = async (event) => {
-      setShow(!show)
-      setShowType("Artist")
-      setEventDisplay([]);
-      if (show) {
+  const viewPerforming = async (event) => {
+    setShow(!show);
+    setShowType("Artist");
+    setEventDisplay([]);
+    if (show) {
       let artists = event.artists;
-    
+
       if (Array.isArray(artists) && artists.length > 0) {
         for (const current of artists) {
           try {
@@ -143,12 +141,12 @@ function CalendarPage() {
               .select("id, profile_picture, username")
               .eq("id", current)
               .single();
-    
+
             if (artistError) {
               console.error("Error fetching artist:", artistError);
               continue;
             }
-    
+
             if (artist && !eventDisplay.includes(artist)) {
               setEventDisplay([...eventDisplay, artist]);
             }
@@ -158,26 +156,34 @@ function CalendarPage() {
         }
       }
     }
-    };
-    
+  };
+
   return (
     <div className="calendar-container">
-      {/* Navigation Links */}
-      <div className="nav-bar">
+      {/* Banner Section */}
+      <div className="banner">
+        <h1 className="company-name">Band4Band</h1>
+      </div>
+
+      {/* Profile Button (Top Right) */}
+      <Link to="/profile">
+        <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
+      </Link>
+
+      {/* Navigation Bar */}
+      <nav className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/profile">Profile</Link>
-      </div>
+      </nav>
 
       {/* Page Content */}
       <div className="calendar-content">
         <h1>Calendar Page</h1>
         <Calendar onChange={setDate} value={date} />
 
-        {/* Temporary Bypass for Testing */}
-        {user?.artist && (  // Force showing the button to test!
+        {user?.artist && (
           <button onClick={() => setShowEventForm(!showEventForm)}>
             {showEventForm ? 'Cancel' : 'Add Event'}
           </button>
@@ -237,59 +243,36 @@ function CalendarPage() {
         {/* Events Display */}
         <div style={{ marginTop: '20px' }}>
           <h2>Events on {date.toDateString()}</h2>
-            {Array.isArray(events) && events.length > 0 ? (
-               events.map((event) => {
-          const eventDate = new Date(event.date);
-          const whenString = eventDate.toLocaleString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-          });
-          return (
+          {Array.isArray(events) && events.length > 0 ? (
+            events.map((event) => {
+              const eventDate = new Date(event.date);
+              const whenString = eventDate.toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              });
+              return (
                 <div key={event.id} className="event-card">
-                <h3>{event.title}</h3>
-                <div class="locationContainer">
-                  <img src="https://cdn-icons-png.flaticon.com/512/64/64113.png"></img>
-                  <p>{event.location}</p>
+                  <h3>{event.title}</h3>
+                  <div className="locationContainer">
+                    <img src="https://cdn-icons-png.flaticon.com/512/64/64113.png" alt="Location" />
+                    <p>{event.location}</p>
+                  </div>
+                  <p>{whenString}</p>
+                  <button onClick={() => viewPerforming(event)}>{showType === "Artist" && !show ? "Hide Artists" : "Show Artists"}</button>
+                  <button onClick={() => viewAttending(event)}>{showType === "Attendees" && !show ? "Hide Attendees" : "Show Attendees"}</button>
+                  {!user?.artist &&
+                    <button onClick={() => switchAttending(event)}>{event.attending.includes(user.id) ? "Attending" : "Not Attending"}</button>}
                 </div>
-                <p>{whenString}</p>
-                <button onClick={() => viewPerforming(event)}>{showType=="Artist" && !show ? "Hide Artists" : "Show Artists"}</button>
-                <button onClick={() => viewAttending(event)}>{showType=="Attendees" && !show ? "Hide Attendees" : "Show Attendees"}</button>
-                {!user?.artist && 
-                <button onClick={() => switchAttending(event)}>{event.attending.includes(user.id) ? "Attending" : "Not Attending"}
-                </button>}
-              </div>
-             );
+              );
             })
-              ) :  (
-                <p>No events available.</p>
-              )}
-        {/* Account Display */}
-        {!show &&    
-        <div>
-          <h2>{showType=="Artist" ? "Performing" : "Attending"}</h2>
-          {eventDisplay.length > 0 ? (
-            eventDisplay.map((account) => (
-              <div key={account.id} className="event-card">
-                <div className="profileContainer">
-                  <img
-                    src={account.profile_picture || "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}
-                    alt={account.username}
-                  />
-                  <Link to={`/account?account=${encodeURIComponent(account.id)}`}>
-                {account.username}
-              </Link>
-                </div>
-              </div>
-            ))
           ) : (
-            <p>No attendees yet.</p>
+            <p>No events available.</p>
           )}
-        </div> }
         </div>
       </div>
     </div>
