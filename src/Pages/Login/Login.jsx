@@ -97,7 +97,7 @@ function Login() {
     } else {
       const { data: DataArtist, error: ErrorArtist } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture, bio, artist, followers, following")
+        .select("id, contact, password, username, profile_picture, bio, artist, followers, following, genres")
         .eq("contact", contact)
         .single();
 
