@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from "../../supabaseClient.js";
 import './Profile.css';
 
+
 function Profile() {
   const allGenres = [
     "Pop", "Rock", "Hip Hop", "Jazz", "Classical", "Electronic", "Reggae", 
@@ -25,6 +26,7 @@ function Profile() {
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState([]);
   const [currentGenre, setCurrentGenre] = useState("");
+
 
   // Get events for artist or listener
   const getEvents = async () => {
@@ -145,6 +147,21 @@ function Profile() {
       }
      }
     };
+
+  //handles upload of pfp
+  const profileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Use FileReader to display the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Set the image data in state
+      };
+    }
+    setUser({
+      profile_picture: reader.readAsDataURL(file)
+    });
+  };
 
   return (
     <div className="profile-container">
