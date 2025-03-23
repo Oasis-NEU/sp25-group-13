@@ -24,6 +24,7 @@ function Discover() {
   const [table, setTable] = useState("");
   const [search, setSearch] = useState("");
   const { user } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   // Redirect to login if the user is not authenticated
@@ -36,7 +37,7 @@ function Discover() {
       setTable("ListenerAccount")
     }
       getArtists();
-  }, [user, navigate]);
+  }, [navigate]);
 
   // Fetch artists based on selected genre
   const getArtists = async () => {
@@ -76,10 +77,21 @@ function Discover() {
       console.log("Current artist followers:", artistData.followers);
   
       const currentFollowers = artistData.followers || [];
+      const currentFollowing = user.following || [];
   
       // 2. Update followers
-      const updatedFollowers = [...currentFollowers, user.id];
-      const updatedFollowing = [...user.following, artist.id];
+      let updatedFollowers=[];
+      let updatedFollowing=[];
+      if (!currentFollowers.includes(user?.id)) {
+        updatedFollowers = [...currentFollowers, user.id];
+      } else {
+        updatedFollowers = currentFollowers;
+      }
+      if (!currentFollowing.includes(user?.id)) {
+        updatedFollowing = [...user.following, artist.id];
+      } else {
+        pdatedFollowing = user.following;
+      }
   
       const { error: updateArtistError } = await supabase
         .from("Artist Account")
@@ -98,17 +110,12 @@ function Discover() {
         console.error("Update user following error:", updateFollowingError);
         return;
       }
-  
+      setUser((prevUser) => ({
+        ...prevUser,
+        following: [...prevUser.following, artist.id],
+      }));
+
       console.log(`Successfully followed ${artist.username}!`);
-  
-      // OPTIONAL: Update local state
-      setArtists((prevArtists) =>
-        prevArtists.map((a) =>
-          a.id === artist.id
-            ? { ...a, followers: updatedFollowers }
-            : a
-        )
-      );
   
     } catch (err) {
       console.error("Unexpected error in follow:", err);
@@ -154,11 +161,8 @@ function Discover() {
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
       </div>
 
       {/* Discover Content */}
@@ -194,7 +198,7 @@ function Discover() {
                 {artist.username}
               </Link>
               {artist.genres ? <p>{artist.genres.join(", ")}</p> : <p></p>}
-              <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
+              <button onClick={() => follow(artist)}>{user?.following.includes(artist?.id) ? "Following" : "Follow"}</button>
             </div>
             );
           }

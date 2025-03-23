@@ -152,9 +152,11 @@ function CalendarPage() {
         <Calendar onChange={setDate} value={date} />
 
         {user?.artist && (
-          <button className="calendar-button" onClick={() => setShowEventForm(!showEventForm)}>
-            {showEventForm ? 'Cancel' : 'Add Event'}
-          </button>
+          <div className="add-event-container">
+            <button className="add-event-button" onClick={() => setShowEventForm(!showEventForm)}>
+              {showEventForm ? 'Cancel' : '➕ Add Event'}
+            </button>
+          </div>
         )}
 
         {showEventForm && (

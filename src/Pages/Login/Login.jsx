@@ -1,7 +1,7 @@
 import './Login.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { supabase } from "../../supabaseClient.js";
+import { supabase } from '../../supabaseClient.js';
 import bcrypt from 'bcryptjs';
 import { useAuth } from '../../AuthProvider.jsx';
 
@@ -21,21 +21,20 @@ function Login() {
     setLoading(true);
     setMessage('');
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const cleanedContact = contact.trim();
     const cleanedUsername = username.trim();
 
-    const { data: contactRepeat, error: fetchErrorContact } = await supabase
+    const { error: fetchErrorContact } = await supabase
       .from(table)
       .select("id")
       .eq("contact", cleanedContact)
-      .single();
+      .maybeSingle();
 
-    const { data: usernameRepeat, error: fetchErrorUser } = await supabase
+    const { error: fetchErrorUser } = await supabase
       .from(table)
       .select("id")
       .eq("username", cleanedUsername)
-      .single();
+      .maybeSingle();
 
     if (!fetchErrorContact) {
       setMessage("This phone number/email is already registered.");
@@ -64,19 +63,15 @@ function Login() {
         };
       }
 
-      const { data, error } = await supabase.from(table).insert([insertData]);
+      const { error } = await supabase.from(table).insert([insertData]);
 
       if (error) {
         setMessage(`Error: ${error.message}`);
       } else {
         setMessage("Account created successfully!");
-        setUser({
-          id: data.id,
-          contact: data.contact,
-          username: data.username,
-          profile_picture: data.profile_picture,
-        });
-        setActiveComponent('login');
+        setActiveComponent("login");
+        setMessage("Please login")
+        navigate("/login");
       }
     }
     setLoading(false);
@@ -88,7 +83,7 @@ function Login() {
     const cleanedContact = contact.trim();
     let data = null;
 
-    const { data: listener, error: listenerError } = await supabase
+    const { data: listener } = await supabase
       .from("ListenerAccount")
       .select("*")
       .eq("contact", cleanedContact)
@@ -97,7 +92,7 @@ function Login() {
     if (listener) {
       data = listener;
     } else {
-      const { data: artist, error: artistError } = await supabase
+      const { data: artist } = await supabase
         .from("Artist Account")
         .select("*")
         .eq("contact", cleanedContact)
@@ -179,7 +174,7 @@ function Login() {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPass(e.target.value.toString())}
+                onChange={(e) => setPass(e.target.value)}
               />
               <button onClick={handleLogin} disabled={error !== ""}>
                 {loading ? "Logging you in..." : "Login"}

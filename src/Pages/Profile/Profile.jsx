@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from "../../supabaseClient.js";
 import './Profile.css';
 
+
 function Profile() {
   const allGenres = [
     "Pop", "Rock", "Hip Hop", "Jazz", "Classical", "Electronic", "Reggae", 
@@ -13,18 +14,23 @@ function Profile() {
     "Funk", "World", "Opera", "Ambient", "Trap", "K-pop", "Synthwave", 
     "Grunge", "New Wave", "Salsa", "Dancehall", "Progressive Rock", 
     "Hard Rock", "Gothic", "Electronica", "Ambient", "Bluegrass", 
-    "Tech House", "Psytrance", "Indie Rock", "Post-punk", "Vaporwave"
+    "Tech House", "Psytrance", "Indie Rock", "Post-punk", "Vaporwave", "Other"
   ];
+
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [aboutText, setAboutText] = useState("");
   const [image, setImage] = useState(null);
   const [table, setTable] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [genres, setGenres] = useState([]);
-  const [currentGenre, setCurrentGenre] = useState("");
+
+  const [genres, setGenres] = useState([]); // Final selected genres
+  const [selectedGenre, setSelectedGenre] = useState(""); // Dropdown value
+  const [customGenre, setCustomGenre] = useState(""); // If "Other" is selected
+
 
   // Get events for artist or listener
   const getEvents = async () => {
@@ -37,6 +43,7 @@ function Profile() {
           .order('artists', { ascending: true });
 
         if (error) throw error;
+
         filteredEvents = data.filter(event => event.artists.includes(user?.id));
       } else {
         const { data, error } = await supabase
@@ -45,6 +52,7 @@ function Profile() {
           .order('attending', { ascending: true });
 
         if (error) throw error;
+
         filteredEvents = data.filter(event => event.attending.includes(user?.id));
       }
 
@@ -56,121 +64,138 @@ function Profile() {
     }
   };
 
-  // On mount: check login, set bio/genre/table
+  // On mount
   useEffect(() => {
     if (!user) {
       navigate("/login");
-    } else if (user?.artist) {
-      setTable("Artist Account");
-    } else {
-      setTable("ListenerAccount");
+      return;
     }
-    
 
+    setTable(user.artist ? "Artist Account" : "ListenerAccount");
     setAboutText(user?.bio ?? "Tell us about yourself...");
-  setGenres(user?.genres);
-  getEvents();
-  
+    setGenres(user?.genres || []);
+    getEvents();
   }, [user, navigate]);
 
-  // Update bio + genre
+  // Handle bio and genres update
   const updateBio = async () => {
-    if (aboutText) {
-      setUploading(true);
-      genres.push(currentGenre);
-      console.log(genres)
+    if (!aboutText) return;
+
+    setUploading(true);
+
+    let updatedGenres = [...genres];
+
+    // Add selected genre (dropdown) if valid and not duplicate
+    if (selectedGenre && !updatedGenres.includes(selectedGenre) && selectedGenre !== "Other") {
+      updatedGenres.push(selectedGenre);
+    }
+
+    // Add custom genre if provided and not duplicate
+    if (customGenre && !updatedGenres.includes(customGenre)) {
+      updatedGenres.push(customGenre);
+    }
+
+    try {
       const { error } = await supabase
         .from(table)
-        .upsert({ id: user?.id, bio: aboutText, genres: genres  });
+        .upsert({ id: user?.id, bio: aboutText, genres: updatedGenres });
 
-      if (error) throw new Error(error.message);
+      if (error) throw error;
+
+      setGenres(updatedGenres);
+      setSelectedGenre("");
+      setCustomGenre("");
+      alert("Profile updated!");
+    } catch (error) {
+      console.error("Error updating bio/genres:", error.message);
+    } finally {
       setUploading(false);
     }
   };
 
-  //sets image to the uploaded file
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-     setImage(file);
+      setImage(file);
     }
-  }
+  };
 
-//uploads file to database
   const uploadImage = async () => {
-    if (image) {
-      try {
-        setUploading(true);
-        const fileName = `${Date.now()}_${image.name}`;
+    if (!image) return;
 
-        // Upload the image to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-          .from('profilepictures')
-          .upload(fileName, image);
+    try {
+      setUploading(true);
 
-        if (uploadError) {
-          console.error("upload error: ", uploadError.message)
-          throw new Error(uploadError.message);
-        }
+      const fileName = `${Date.now()}_${image.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from('profilepictures')
+        .upload(fileName, image);
 
-        // Get the public URL of the uploaded image
-        const { data: publicURLData, error: urlError } = supabase
-          .storage
-          .from('profilepictures')
-          .getPublicUrl(fileName);
+      if (uploadError) throw uploadError;
 
-        if (urlError) {
-          throw urlError;
-        }
+      const { data: publicURLData, error: urlError } = supabase
+        .storage
+        .from('profilepictures')
+        .getPublicUrl(fileName);
 
-        const url = publicURLData.publicUrl;
-        if (url) {
-          setUploading(true);
-          const { data, error } = await supabase
-            .from(table)
-            .upsert({ id: user?.id, profile_picture: url });
-          if (error) {
-            throw new Error(error.message);
-          }
-        }
-        setUploading(false);
-        
-        alert('Upload successful!');
-        setImage(null); 
+      if (urlError) throw urlError;
 
-      } catch (uploadError) {
-        alert('Error uploading file: ' + uploadError.message);
-      } finally {
-        setUploading(false);
-      }
-     }
-    };
+      const url = publicURLData.publicUrl;
+
+      const { error } = await supabase
+        .from(table)
+        .upsert({ id: user?.id, profile_picture: url });
+
+      if (error) throw error;
+
+      alert('Upload successful!');
+      setImage(null);
+    } catch (error) {
+      alert('Error uploading file: ' + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  //handles upload of pfp
+  const profileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Use FileReader to display the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Set the image data in state
+      };
+    }
+    setUser({
+      profile_picture: reader.readAsDataURL(file)
+    });
+  };
 
   return (
     <div className="profile-container">
-      {/* Banner */}
       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
 
-      {/* Navigation Bar */}
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/search">Search</Link>
       </div>
 
-      {/* Profile */}
       <div className="profile-content">
-        <img className="profile-pic" src={user?.profile_picture} alt="Profile" />
+        <img
+          className="profile-pic"
+          src={user?.profile_picture || "https://via.placeholder.com/150"}
+          alt="Profile"
+        />
+
         <input type="file" accept="image/*" onChange={handleUpload} />
         <button className="button" onClick={uploadImage} disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload"}
+          {uploading ? "Uploading..." : "Upload Image"}
         </button>
 
         <h2 className="profile-username">{user?.username || "User Name"}</h2>
@@ -179,45 +204,62 @@ function Profile() {
           className="about-textbox"
           value={aboutText}
           onChange={(e) => setAboutText(e.target.value)}
+          placeholder="Tell us about yourself..."
         />
 
-        {/* Genre selection for artists */}
         {user?.artist && (
           <>
+            {/* Genre Selection */}
             <select
               className="about-textbox"
-              value={currentGenre}
-              onChange={(e) => setCurrentGenre(e.target.value)}
+              value={selectedGenre}
+              onChange={(e) => setSelectedGenre(e.target.value)}
             >
               <option value="">Select Genre</option>
-              <option value="Rock">Rock</option>
-              <option value="Pop">Pop</option>
-              <option value="Hip Hop">Hip Hop</option>
-              <option value="Jazz">Jazz</option>
-              <option value="Electronic">Electronic</option>
-              <option value="Classical">Classical</option>
-              <option value="Indie">Indie</option>
-              <option value="Metal">Metal</option>
-              <option value="Other">Other</option>
+              {allGenres.map((genre, index) => (
+                <option key={index} value={genre}>
+                  {genre}
+                </option>
+              ))}
             </select>
 
-            {!allGenres.includes(currentGenre) && (
+            {/* Custom Genre Input */}
+            {selectedGenre === "Other" && (
               <input
                 className="about-textbox"
                 type="text"
-                placeholder="Enter your genre"
-                value={currentGenre}
-                onChange={(e) => setCurrentGenre(e.target.value)}
+                placeholder="Enter your custom genre"
+                value={customGenre}
+                onChange={(e) => setCustomGenre(e.target.value)}
               />
             )}
+
+            {/* Genres Display */}
+            <div className="genres-section">
+              <h3>Genres:</h3>
+              {genres.length > 0 ? (
+                <ul className="genres-list">
+                  {genres.map((genre, index) => (
+                    <li key={index}>{genre}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No genres selected yet.</p>
+              )}
+            </div>
           </>
         )}
-
-        <button className="button" onClick={updateBio}>Save</button>
-
-        {/* Events */}
-        <div className="events-section">
-          {Array.isArray(events) && events.length > 0 ? (
+        
+        <button className="button" onClick={updateBio} disabled={uploading}>
+          {uploading ? "Saving..." : "Save Profile"}
+        </button>
+      </div>
+      {/* Events */}
+      <div className="events-section">
+          <h3>Your Events</h3>
+          {loading ? (
+            <p>Loading events...</p>
+          ) : events.length > 0 ? (
             events.map((event) => {
               const eventDate = new Date(event.date);
               const whenString = eventDate.toLocaleString('en-US', {
@@ -244,10 +286,9 @@ function Profile() {
             <p>No events available.</p>
           )}
         </div>
-      </div>
+        <button onClick={() => navigate("/login")}>Log Out</button>
     </div>
   );
 }
 
 export default Profile;
-

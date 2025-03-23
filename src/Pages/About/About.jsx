@@ -19,14 +19,17 @@ function About() {
         <h1 className="company-name">Band4Band</h1>
       </div>
 
+       {/* Profile Button (Top Right) */}
+            <Link to="/profile">
+              <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
+            </Link>
+
       {/* Navigation Bar */}
       <nav className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
       </nav>
 
       {/* About Section */}
