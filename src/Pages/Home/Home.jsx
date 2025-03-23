@@ -39,6 +39,10 @@ function Home() {
 
   return (
     <div className="home-container">
+      {/* Graffiti Paint Layers */}
+      <div className="paint-splatter"></div>
+      <div className="paint-splatter layer2"></div>
+
       {/* Post Button (Top Left) - Only visible for artists */}
       {user?.artist && (
         <Link to="/post">

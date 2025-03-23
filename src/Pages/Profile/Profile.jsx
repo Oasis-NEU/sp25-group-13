@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from "../../supabaseClient.js";
 import './Profile.css';
 
-
 function Profile() {
   const allGenres = [
     "Pop", "Rock", "Hip Hop", "Jazz", "Classical", "Electronic", "Reggae", 
@@ -13,7 +12,7 @@ function Profile() {
     "EDM", "Dubstep", "Trance", "Reggaeton", "Ska", "Gospel", 
     "Funk", "World", "Opera", "Ambient", "Trap", "K-pop", "Synthwave", 
     "Grunge", "New Wave", "Salsa", "Dancehall", "Progressive Rock", 
-    "Hard Rock", "Gothic", "Electronica", "Ambient", "Bluegrass", 
+    "Hard Rock", "Gothic", "Electronica", "Bluegrass", 
     "Tech House", "Psytrance", "Indie Rock", "Post-punk", "Vaporwave", "Other"
   ];
 
@@ -27,35 +26,32 @@ function Profile() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [customGenre, setCustomGenre] = useState("");
 
-  const [genres, setGenres] = useState([]); // Final selected genres
-  const [selectedGenre, setSelectedGenre] = useState(""); // Dropdown value
-  const [customGenre, setCustomGenre] = useState(""); // If "Other" is selected
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    setTable(user.artist ? "Artist Account" : "ListenerAccount");
+    setAboutText(user?.bio ?? "Tell us about yourself...");
+    setGenres(user?.genres || []);
+    getEvents();
+    getPosts();
+  }, [user, navigate]);
 
-
-  // Get events for artist or listener
   const getEvents = async () => {
     try {
-      let filteredEvents = [];
-      if (user.artist) {
-        const { data, error } = await supabase
-          .from("Event")
-          .select('*')
-          .order('artists', { ascending: true });
+      const { data, error } = await supabase
+        .from("Event")
+        .select('*');
+      if (error) throw error;
 
-        if (error) throw error;
-
-        filteredEvents = data.filter(event => event.artists.includes(user?.id));
-      } else {
-        const { data, error } = await supabase
-          .from("Event")
-          .select('*')
-          .order('attending', { ascending: true });
-
-        if (error) throw error;
-
-        filteredEvents = data.filter(event => event.attending.includes(user?.id));
-      }
+      const filteredEvents = data.filter(event =>
+        user.artist ? event.artists.includes(user?.id) : event.attending.includes(user?.id)
+      );
 
       setEvents(filteredEvents);
     } catch (error) {
@@ -67,51 +63,30 @@ function Profile() {
 
   const getPosts = async () => {
     try {
-      let filteredPosts = [];
-        const { data, error } = await supabase
-          .from("Post")
-          .select('*')
-          .order('poster', { ascending: true });
+      const { data, error } = await supabase
+        .from("Post")
+        .select('*')
+        .order('poster', { ascending: true });
 
-        if (error) throw error;
-
-        filteredPosts = data.filter(post => post.poster == user?.id);
-        setPosts(filteredPosts);
+      if (error) throw error;
+      const filteredPosts = data.filter(post => post.poster === user?.id);
+      setPosts(filteredPosts);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error('Error fetching posts:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // On mount
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    setTable(user.artist ? "Artist Account" : "ListenerAccount");
-    setAboutText(user?.bio ?? "Tell us about yourself...");
-    setGenres(user?.genres || []);
-    getEvents();
-    getPosts();
-  }, [user, navigate]);
-
-  // Handle bio and genres update
   const updateBio = async () => {
     if (!aboutText) return;
 
     setUploading(true);
-
     let updatedGenres = [...genres];
 
-    // Add selected genre (dropdown) if valid and not duplicate
     if (selectedGenre && !updatedGenres.includes(selectedGenre) && selectedGenre !== "Other") {
       updatedGenres.push(selectedGenre);
     }
-
-    // Add custom genre if provided and not duplicate
     if (customGenre && !updatedGenres.includes(customGenre)) {
       updatedGenres.push(customGenre);
     }
@@ -120,7 +95,6 @@ function Profile() {
       const { error } = await supabase
         .from(table)
         .upsert({ id: user?.id, bio: aboutText, genres: updatedGenres });
-
       if (error) throw error;
 
       setGenres(updatedGenres);
@@ -136,37 +110,30 @@ function Profile() {
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
+    if (file) setImage(file);
   };
 
   const uploadImage = async () => {
     if (!image) return;
-
     try {
       setUploading(true);
-
       const fileName = `${Date.now()}_${image.name}`;
+
       const { error: uploadError } = await supabase.storage
         .from('profilepictures')
         .upload(fileName, image);
-
       if (uploadError) throw uploadError;
 
       const { data: publicURLData, error: urlError } = supabase
         .storage
         .from('profilepictures')
         .getPublicUrl(fileName);
-
       if (urlError) throw urlError;
 
       const url = publicURLData.publicUrl;
-
       const { error } = await supabase
         .from(table)
         .upsert({ id: user?.id, profile_picture: url });
-
       if (error) throw error;
 
       alert('Upload successful!');
@@ -176,21 +143,6 @@ function Profile() {
     } finally {
       setUploading(false);
     }
-  };
-
-  //handles upload of pfp
-  const profileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Use FileReader to display the image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // Set the image data in state
-      };
-    }
-    setUser({
-      profile_picture: reader.readAsDataURL(file)
-    });
   };
 
   return (
@@ -204,12 +156,8 @@ function Profile() {
         <Link to="/about">About</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
+        <Link to="/profile">Profile</Link>
       </div>
-
-      <Link to="/profile">
-        <img src={user?.profile_picture} alt="Profile" className="profile-button" />
-      </Link>
-
 
       <div className="profile-content">
         <img
@@ -234,7 +182,6 @@ function Profile() {
 
         {user?.artist && (
           <>
-            {/* Genre Selection */}
             <select
               className="about-textbox"
               value={selectedGenre}
@@ -242,13 +189,10 @@ function Profile() {
             >
               <option value="">Select Genre</option>
               {allGenres.map((genre, index) => (
-                <option key={index} value={genre}>
-                  {genre}
-                </option>
+                <option key={index} value={genre}>{genre}</option>
               ))}
             </select>
 
-            {/* Custom Genre Input */}
             {selectedGenre === "Other" && (
               <input
                 className="about-textbox"
@@ -259,7 +203,6 @@ function Profile() {
               />
             )}
 
-            {/* Genres Display */}
             <div className="genres-section">
               <h3>Genres:</h3>
               {genres.length > 0 ? (
@@ -274,64 +217,39 @@ function Profile() {
             </div>
           </>
         )}
-        
+
         <button className="button" onClick={updateBio} disabled={uploading}>
           {uploading ? "Saving..." : "Save Profile"}
         </button>
       </div>
-      {/* Events */}
-      <div className="events-section">
-          <h3>Your Events</h3>
-          {loading ? (
-            <p>Loading events...</p>
-          ) : events.length > 0 ? (
-            events.map((event) => {
-              const eventDate = new Date(event.date);
-              const whenString = eventDate.toLocaleString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-              });
-              return (
-                <div key={event.id} className="event-card">
-                  <h3>{event.title}</h3>
-                  <p>{event.location}</p>
-                  <p>{whenString}</p>
-                  <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>
-                    View Event
-                  </Link>
-                </div>
-              );
-            })
-          ) : (
-            <p>No events available.</p>
-          )}
-        </div>
 
-        {/* Posts */}
-      <div className="feed">
-        <h2>Your Posts</h2>
-        <div className="post-container">
-          {posts.length === 0 ? (
-            <p>No posts yet! Go to the home page to post!.</p>
-          ) : (
-            posts.map((post, index) => (
-              <div key={index} className="post">
-                <p>{post.bio}</p>
-                {post.media && post.media.map((url, idx) => (
-                  <img key={idx} src={url} alt={`Post ${index} Image ${idx}`} style={{ width: "100%", borderRadius: "10px" }} />
-                ))}
+      <div className="events-section">
+        <h3>Your Events</h3>
+        {loading ? (
+          <p>Loading events...</p>
+        ) : events.length > 0 ? (
+          events.map((event) => {
+            const eventDate = new Date(event.date);
+            const whenString = eventDate.toLocaleString('en-US', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit', hour12: true,
+            });
+            return (
+              <div key={event.id} className="event-card">
+                <h3>{event.title}</h3>
+                <p>{event.location}</p>
+                <p>{whenString}</p>
+                <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>View Event</Link>
               </div>
-            ))
-          )}
-        </div>
-        <button onClick={() => navigate("/login")}>Log Out</button>
+            );
+          })
+        ) : (
+          <p>No events available.</p>
+        )}
+      </div>
+
+      <button className="button" onClick={() => navigate("/login")}>Log Out</button>
     </div>
-  </div>
   );
 }
 
