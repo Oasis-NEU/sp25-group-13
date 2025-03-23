@@ -2,27 +2,29 @@ import './About.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect } from 'react';
-
+import profile from "../../assets/emptyprofile.jpg"; // make sure this path is correct
 
 function About() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (user == null) {
+    if (!user) {
       navigate("/login");
     }
-  });
+  }, [user, navigate]);
+
   return (
-    <div className="about-container">
+    <div className="about-container graffiti">
       {/* Banner Section */}
       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
 
-       {/* Profile Button (Top Right) */}
-            <Link to="/profile">
-              <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
-            </Link>
+      {/* Profile Button (Top Right) */}
+      <Link to="/profile">
+        <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
+      </Link>
 
       {/* Navigation Bar */}
       <nav className="nav-bar">
@@ -46,42 +48,19 @@ function About() {
       <div className="team">
         <h2>Meet the Team</h2>
         <div className="team-grid">
-          <div className="member">
-            <p>Shelby Snyder</p>
-            <a href="https://www.linkedin.com/in/shelby-snyder-277a94268" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-          <div className="member">
-            <p>Colin Quigley</p>
-            <a href="https://www.linkedin.com/in/colin-quigley-845a44330/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-          <div className="member">
-            <p>Jack Senders</p>
-            <a href="https://www.linkedin.com/in/jack-senders-4b6525119/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-          <div className="member">
-            <p>Joseph Odetayo</p>
-            <a href="https://www.linkedin.com/in/joseph-odetayo-35273b22a/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-          <div className="member">
-            <p>Sophia Bovino</p>
-            <a href="https://www.linkedin.com/in/sophia-bovino-aa797b1b6/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
-          <div className="member">
-            <p>Hector Batista</p>
-            <a href="https://www.linkedin.com/in/hectorbatistajr/" target="_blank" rel="noopener noreferrer">
-              LinkedIn
-            </a>
-          </div>
+          {[
+            ["Shelby Snyder", "https://www.linkedin.com/in/shelby-snyder-277a94268"],
+            ["Colin Quigley", "https://www.linkedin.com/in/colin-quigley-845a44330/"],
+            ["Jack Senders", "https://www.linkedin.com/in/jack-senders-4b6525119/"],
+            ["Joseph Odetayo", "https://www.linkedin.com/in/joseph-odetayo-35273b22a/"],
+            ["Sophia Bovino", "https://www.linkedin.com/in/sophia-bovino-aa797b1b6/"],
+            ["Hector Batista", "https://www.linkedin.com/in/hectorbatistajr/"]
+          ].map(([name, link], index) => (
+            <div className="member" key={index}>
+              <p>{name}</p>
+              <a href={link} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          ))}
         </div>
       </div>
     </div>

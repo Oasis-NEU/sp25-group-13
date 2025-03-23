@@ -1,13 +1,25 @@
+/* Reset Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Graffiti Background */
 .profile-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d4f1f4; /* same light aqua as Home */
   justify-content: center;
   padding: 20px;
-  background-color: #d4f1f4; /* light aqua, same as home background */
   min-height: 100vh;
-  position: relative;
+  background-image: 
+    url('https://www.transparenttextures.com/patterns/graffiti.png'),
+    linear-gradient(to bottom, #d4f1f4, #a9e1e8);
+  background-repeat: repeat;
+  background-size: cover;
+  background-blend-mode: overlay;
 }
 
 /* Nav Bar Matching Home's .nav-bar */
@@ -16,8 +28,9 @@
   justify-content: center;
   gap: 20px;
   width: 100%;
-  padding: 15px;
+  padding: 20px;
   background-color: #189ab4;
+  font-size: 1.1rem;
 }
 
 .nav-bar a {
@@ -35,11 +48,11 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background: white; /* same as home feed */
+  background: white;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+  max-width: 450px;
   width: 100%;
   text-align: center;
   margin-top: 30px;
@@ -50,11 +63,11 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #05445e; /* deep navy */
+  border: 3px solid #05445e;
 }
 
 .profile-username {
-  font-size: 20px;
+  font-size: 1.5rem;
   font-weight: bold;
   margin: 10px 0;
   color: #05445e;
@@ -68,24 +81,26 @@
   padding: 10px;
   resize: none;
   font-size: 14px;
-  background-color: #f0f9fb; /* subtle aqua background */
+  background-color: #f0f9fb;
   color: #05445e;
 }
 
 .button {
-  padding: 8px 15px;
-  background-color: #189ab4; /* main teal */
+  padding: 10px 18px;
+  background-color: #189ab4;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 .button:hover,
 .save-button:hover {
-  background-color: #05445e; /* deep navy hover */
+  background-color: #05445e;
+  transform: scale(1.05);
 }
 
 /* Events Grid */
@@ -98,9 +113,9 @@
   margin-top: 20px;
 }
 
-/* Event Cards (Same as Home posts) */
+/* Event Cards */
 .event-card {
-  background-color: #75e6da; /* cyan-blue */
+  background-color: #75e6da;
   padding: 20px;
   text-align: center;
   border-radius: 10px;
@@ -149,40 +164,21 @@
 /* Banner */
 .banner {
   width: 100%;
-  height: 200px;
+  height: 220px;
   background-color: #05445e;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .company-name {
   color: white;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: bold;
 }
 
-.nav-bar {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-  padding: 15px;
-  background-color: #189ab4;
-}
-
-.nav-bar a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.nav-bar a:hover {
-  text-decoration: underline;
-}
-
+/* Genre Section */
 .genres-section {
   margin-top: 20px;
 }
@@ -198,4 +194,6 @@
   margin: 5px;
   padding: 8px 12px;
   border-radius: 15px;
+  font-weight: bold;
+  color: #05445e;
 }

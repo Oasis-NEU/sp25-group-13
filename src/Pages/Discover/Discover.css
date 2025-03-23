@@ -154,3 +154,13 @@
 .band-card button:hover {
   background-color: #189ab4;
 }
+.graffiti {
+  background: linear-gradient(to bottom, #d4f1f4, #a9e1e8);
+  background-image: 
+    url('https://www.transparenttextures.com/patterns/graffiti.png'),
+    linear-gradient(to bottom, #d4f1f4, #a9e1e8);
+  background-repeat: repeat;
+  background-size: cover;
+  background-blend-mode: overlay;
+  position: relative;
+}
