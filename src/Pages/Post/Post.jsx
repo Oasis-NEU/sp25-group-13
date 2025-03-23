@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthProvider.jsx';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../supabaseClient.js';
-
+import profile from '../../assets/emptyprofile.jpg';
 
 function Post() {
   const { user } = useAuth();
@@ -17,154 +17,160 @@ function Post() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Fetching posts...");
-    if (user == null) {
+    if (!user) {
       navigate("/login");
     } else {
       fetchPosts();
     }
-  }, [user, navigate]);
-  
+  }, [user]);
+
   const fetchPosts = async () => {
-    console.log("Fetching posts for user:", user.id);
     const { data, error } = await supabase
       .from("Post")
       .select("*")
       .eq("poster", user.id);
-  
+
     if (error) {
       console.error("Error fetching posts: ", error.message);
     } else {
-      console.log("Posts fetched:", data);
       setPosts(data);
-    }
-  };
-  const uploadImage = async () => {
-    if (image) {
-      try {
-        setUploading(true);
-        const fileName = `${user.id}/${Date.now()}_${image.name}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('profilepictures')
-          .upload(fileName, image);
-
-        if (uploadError) {
-          console.error("upload error: ", uploadError.message);
-          throw new Error(uploadError.message);
-        }
-
-        const { data: publicURLData, error: urlError } = supabase
-          .storage
-          .from('profilepictures')
-          .getPublicUrl(fileName);
-
-        if (urlError) {
-          throw urlError;
-        }
-
-        const publicURL = publicURLData.publicUrl;
-
-        setMedia((prev) => [...prev, publicURL]);
-
-        alert('Upload successful!');
-
-      } catch (err) {
-        alert('Error uploading file: ' + err.message);
-      } finally {
-        setUploading(false);
-      }
     }
   };
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
+    if (file) setImage(file);
+  };
+
+  const uploadImage = async () => {
+    if (!user || !image) return;
+
+    try {
+      setUploading(true);
+      const fileName = `${user.id}/${Date.now()}_${image.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('profilepictures')
+        .upload(fileName, image);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicURLData } = supabase
+        .storage
+        .from('profilepictures')
+        .getPublicUrl(fileName);
+
+      const publicURL = publicURLData.publicUrl;
+      setMedia((prev) => [...prev, publicURL]);
+    } catch (err) {
+      alert('Error uploading: ' + err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
   const post = async () => {
     try {
-      const { data, error } = await supabase
-        .from("Post")
-        .insert([{
-          poster: user?.id,     // User ID of the person creating the post
-          bio: bio,             // Post content (bio/description)
-          likes: 0,             // Default like count is 0
-          media: media,         // Media associated with the post (URL, etc.)
-          comments: []         // No comments initially
-        }]);
+      const { data, error } = await supabase.from("Post").insert([{
+        poster: user.id,
+        bio,
+        likes: 0,
+        media,
+        comments: []
+      }]);
 
-      if (error) {
-        throw error; // If there is an error, throw it to be caught
-      }
-      console.log("Post created successfully:", data);
-      // Handle success (perhaps update UI or redirect)
+      if (error) throw error;
+
+      setMessage("Post created!");
+      setBio("Add a caption...");
+      setMedia([]);
+      fetchPosts();
     } catch (error) {
-      setErrorMessage(error.message || "Something went wrong while creating the post.");
-      console.error("Error creating post:", error);
+      setMessage("Error: " + error.message);
     }
-    navigate("/home")
-  };
-
-  const handleDateChange = (date, postId) => {
-    setSelectedDate(date);
-    updatePostDate(postId, date);
-  };
-
-  const updatePostDate = async (postId, date) => {
-    const { error } = await supabase
-      .from("Post")
-      .update({ date: date })
-      .eq("id", postId);
-
-    if (error) {
-      console.error("Error updating post date: ", error.message);
-    } else {
-      fetchPosts(); // Fetch posts again to update the list
-    }
+    navigate("/home");
   };
 
   return (
-    <div>
-      <div className="Links">
-        <Link to="/home">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
-        <Link to="/calendar">Calendar</Link>
-        <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
-
+    <div className="discover-container">
+      {/* Banner */}
+      <div className="banner">
+        <h1 className="company-name">Band4Band</h1>
       </div>
 
+      {/* Profile Button */}
+      <Link to="/profile">
+        <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
+      </Link>
 
-      <div className="Graphics">
-        <h1>Post Page</h1>
-        <input type="file" className="imageInput" accept="image/*" onChange={handleUpload}></input>
-        <button className="button" id="upload-button" onClick={uploadImage} disabled={uploading}>{uploading ? 'Uploading...' : '+'}</button>
-        <button className="button" id="post-button" onClick={post}>Post</button>
-        
+      {/* Navigation Bar */}
+      <div className="nav-bar">
+        <Link to="/home">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/calendar">Calendar</Link>
+        <Link to="/discover">Discover</Link>
+      </div>
+
+      {/* Post Content */}
+      <div className="discover-content">
+        <h2 className="discover-title">Create a Post</h2>
+
+        <div className="filters">
+          <input type="file" className="imageInput" accept="image/*" onChange={handleUpload} />
+          <button onClick={uploadImage} disabled={uploading || !image} className="button">
+            {uploading ? "Uploading..." : "Upload Image"}
+          </button>
+        </div>
+
         <div className="uploaded-images">
           {media.map((url, index) => (
             <img key={index} src={url} alt={`Uploaded ${index}`} className="uploaded-image" />
           ))}
         </div>
 
-
-        <textarea 
+        <textarea
           className="bio-textbox"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
         />
 
-        
+        <button className="button" onClick={post}>Post</button>
+        <div className="my-posts-section">
+  <h2 className="my-posts-title">My Posts</h2>
+  <div className="my-posts-grid">
+    {posts.length === 0 ? (
+      <p>No posts yet.</p>
+    ) : (
+      posts.map((post, index) => (
+        <div key={index} className="post-card">
+          <p>{post.bio}</p>
+          {Array.isArray(post.media) && post.media.length > 0 ? (
+  post.media.map((url, idx) => (
+    <img key={idx} src={url} alt={`Post ${index} Img ${idx}`} className="post-image" />
+  ))
+) : (
+  <p>No image uploaded.</p>
+)}
+
+          
+          <input
+            type="date"
+            className="date-picker"
+            value={post.date || ''}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              updatePostDate(post.id, e.target.value);
+            }}
+          />
+        </div>
+      ))
+    )}
+  </div>
+</div>
+
       </div>
     </div>
   );
 }
 
-
-export default Post
-
+export default Post;
