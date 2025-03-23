@@ -69,13 +69,9 @@ function Login() {
         setMessage(`Error: ${error.message}`);
       } else {
         setMessage("Account created successfully!");
-        setUser({
-          id: data.id,
-          contact: data.contact,
-          username: data.username,
-          profile_picture: data.profile_picture,
-        });
-        setActiveComponent('login');
+        setActiveComponent("login");
+        setMessage("Please login")
+        navigate("/login");
       }
     }
     setLoading(false);
