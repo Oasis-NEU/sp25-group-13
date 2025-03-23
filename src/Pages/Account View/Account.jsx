@@ -30,13 +30,18 @@ function Account() {
       }
     }
     getAcct();
+
   }, [location]);
+
+  useEffect(() => {
+    getEvents();
+  }, [account])
 
 //gets events for this artist
 const getEvents = async () => {
   try {
-    let filteredEvents = [];
     console.log(account)
+    let filteredEvents = [];
     if (account?.artist) {
       const { data, error } = await supabase
       .from("Event")
@@ -47,6 +52,7 @@ const getEvents = async () => {
     filteredEvents = data.filter(event => {
       return event.artists.includes(account?.id); 
     });
+
     } else {
       const { data, error } = await supabase
       .from("Event")
@@ -71,7 +77,6 @@ const getEvents = async () => {
     if (!user) {
       navigate("/login");
     }
-    getEvents();
 
   }, [user, navigate]);
 
@@ -107,6 +112,9 @@ const getEvents = async () => {
 
         {/* events display */}
         <div className="events-section">
+          <script>
+            getEvents();
+          </script>
           {Array.isArray(events) && events.length > 0 ? (
         events.map((event) => {
           const eventDate = new Date(event.date);
@@ -134,6 +142,19 @@ const getEvents = async () => {
             <p>No events available.</p>
           )}
         </div>
+        {/* Genres Display */}
+        <div className="genres-section">
+              <h3>Genres:</h3>
+              {account?.genres.length > 0 ? (
+                <ul className="genres-list">
+                  {account?.genres.map((genre, index) => (
+                    <li key={index}>{genre}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No genres selected yet.</p>
+              )}
+            </div>
       </div>
     </div>
   );
