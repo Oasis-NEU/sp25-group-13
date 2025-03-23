@@ -1,115 +1,119 @@
+
 /* Reset Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-/* Page Background */
 .login-page {
-  background: linear-gradient(to bottom right, #d4f1f4, #ffffff);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(to bottom right, #d4f1f4, #ffffff);
   position: relative;
+  overflow: hidden;
 }
 
-/* Banner */
-.banner {
-  width: 100%;
-  height: 200px;
-  background-color: #05445e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: glitterPop 2s ease-in-out infinite alternate;
-}
-
-@keyframes glitterPop {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.02); }
-}
-
-.company-name {
-  color: white;
-  font-size: 2.7rem;
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* Nav Bar */
+/* Navigation Bar */
 .nav-bar {
+  background-color: #189ab4;
   display: flex;
   justify-content: center;
+  padding: 10px;
   gap: 20px;
-  width: 100%;
-  padding: 15px;
-  background-color: #189ab4;
+  z-index: 2;
+  position: relative;
 }
 
 .nav-bar a {
   color: white;
   text-decoration: none;
   font-weight: bold;
-  transition: all 0.3s ease-in-out;
+  padding: 8px 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-bar a:hover {
-  text-decoration: underline;
-  letter-spacing: 1px;
+  background-color: #05445e;
+  transform: translateY(-2px);
 }
 
-/* Header */
-.login-header {
-  font-size: 28px;
-  font-weight: bold;
-  margin: 30px 0 20px;
+/* Banner */
+.banner {
+  background-color: #05445e;
+  color: white;
   text-align: center;
-  color: #05445e;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  padding: 20px 0;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 2;
+  position: relative;
 }
 
-/* Button Row */
+/* Tagline */
+.login-tagline {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #05445e;
+  opacity: 0.8;
+  z-index: 2;
+}
+
+/* Button Container */
 .button-container {
   display: flex;
-  gap: 16px;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin: 15px 0;
+  z-index: 2;
 }
 
+/* Login Buttons */
 .login-button {
+  width: 160px;
   padding: 10px 20px;
   font-size: 16px;
+  margin: 0 8px;
   background-color: #189ab4;
   color: white;
   border: none;
-  border-radius: 30px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
   font-weight: bold;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .login-button:hover {
   background-color: #05445e;
-  transform: scale(1.05);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 15px rgba(5, 68, 94, 0.4);
 }
 
-/* Form Container */
-.login-container,
+/* Headers */
+.login-header {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 20px 0;
+  text-align: center;
+  color: #05445e;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.login,
 .create-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  padding-bottom: 40px;
+  min-height: 50vh;
+  z-index: 2;
 }
 
 .login-form,
@@ -120,21 +124,19 @@
   justify-content: center;
   width: 100%;
   max-width: 400px;
-  padding: 30px;
+  padding: 20px;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 2;
 }
 
 .login-form:hover,
 .create-form:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
 }
 
-/* Input & Buttons */
 .login-form input,
 .create-form input,
 .login-form button,
@@ -144,9 +146,16 @@
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 25px;
+  border-radius: 5px;
   font-size: 1rem;
+}
+
+h2 {
   text-align: center;
+  margin-bottom: 15px;
+  color: #05445e;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .login-form button,
@@ -156,65 +165,60 @@
   font-weight: bold;
   border: none;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: background 0.3s, transform 0.2s;
+  transition: background-color 0.3s ease;
 }
 
 .login-form button:hover,
 .create-form button:hover {
   background-color: #05445e;
-  transform: scale(1.03);
 }
 
-/* Section Headings */
-h2 {
-  text-align: center;
-  margin-bottom: 15px;
+/* Placeholder Message */
+.login-placeholder {
+  margin-top: 30px;
+  font-size: 1.2rem;
   color: #05445e;
-  font-size: 22px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Message Styling */
-p {
+  opacity: 0.7;
   text-align: center;
-  color: #05445e;
-  font-size: 1rem;
-  margin-top: 10px;
+  z-index: 2;
 }
 
-/* Dead Space Add-on */
-.login-tagline {
-  margin-top: 10px;
-  font-style: italic;
-  font-weight: bold;
-  color: #05445e;
-  text-align: center;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-}
-
-.emoji-glam {
+/* Graffiti Drip Effect */
+.paint-splatter {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 3rem;
-  animation: bob 2s ease-in-out infinite;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 30%, #05445e 0%, transparent 30%),
+    radial-gradient(circle at 80% 20%, #189ab4 0%, transparent 30%),
+    radial-gradient(circle at 60% 70%, #05445e 0%, transparent 25%),
+    radial-gradient(circle at 30% 80%, #189ab4 0%, transparent 20%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.3;
+  animation: drip 4s ease-in-out infinite;
+  z-index: 1;
 }
 
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+.paint-splatter.layer2 {
+  animation-delay: 2s;
+  opacity: 0.2;
 }
 
-/* Responsive */
-@media (max-width: 500px) {
-  .login-button {
-    width: 100%;
+@keyframes drip {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.4;
   }
-  .login-form,
-  .create-form {
-    padding: 20px;
+  50% {
+    transform: translateY(10px) scaleY(1.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.4;
   }
 }

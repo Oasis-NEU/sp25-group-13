@@ -22,16 +22,19 @@ function Login() {
     setMessage('');
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const cleanedContact = contact.trim();
+    const cleanedUsername = username.trim();
+
     const { data: contactRepeat, error: fetchErrorContact } = await supabase
       .from(table)
       .select("id")
-      .eq("contact", contact)
+      .eq("contact", cleanedContact)
       .single();
 
     const { data: usernameRepeat, error: fetchErrorUser } = await supabase
       .from(table)
       .select("id")
-      .eq("username", username)
+      .eq("username", cleanedUsername)
       .single();
 
     if (!fetchErrorContact) {
@@ -44,8 +47,8 @@ function Login() {
       return;
     } else {
       let insertData = {
-        contact,
-        username,
+        contact: cleanedContact,
+        username: cleanedUsername,
         password: hashedPassword,
         following: [],
         followers: [],
@@ -82,25 +85,26 @@ function Login() {
   const handleLogin = async () => {
     setLoading(true);
     setMessage('');
+    const cleanedContact = contact.trim();
     let data = null;
 
-    const { data: DataListener, error: ErrorListener } = await supabase
+    const { data: listener, error: listenerError } = await supabase
       .from("ListenerAccount")
-      .select("id, contact, password, username, profile_picture, bio, artist, followers, following")
-      .eq("contact", contact)
+      .select("*")
+      .eq("contact", cleanedContact)
       .single();
 
-    if (!ErrorListener) {
-      data = DataListener;
+    if (listener) {
+      data = listener;
     } else {
-      const { data: DataArtist, error: ErrorArtist } = await supabase
+      const { data: artist, error: artistError } = await supabase
         .from("Artist Account")
-        .select("id, contact, password, username, profile_picture, bio, artist, followers, following")
-        .eq("contact", contact)
+        .select("*")
+        .eq("contact", cleanedContact)
         .single();
 
-      if (!ErrorArtist) {
-        data = DataArtist;
+      if (artist) {
+        data = artist;
       } else {
         setMessage("Phone number/email not found.");
         setLoading(false);
@@ -133,13 +137,14 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      {/* Banner */}
+    <div className="login-page graffiti">
+      <div className="paint-splatter"></div>
+      <div className="paint-splatter layer2"></div>
+
       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
       </div>
 
-      {/* Navigation Bar */}
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
@@ -150,10 +155,8 @@ function Login() {
         <Link to="/profile">Profile</Link>
       </div>
 
-      {/* Tagline for extra sparkle */}
       <p className="login-tagline">“Your Front Row Seat to Local Music.”</p>
 
-      {/* Main Login/Create Area */}
       <div className="login-container">
         <h1 className="login-header">Login or Create an Artist or Listener Account</h1>
         <div className="button-container">
@@ -237,7 +240,6 @@ function Login() {
         )}
       </div>
 
-      {/* Floating Charli-style sparkle */}
       <div className="emoji-glam">✨</div>
     </div>
   );
@@ -249,7 +251,7 @@ function HandleContact({ contact, setContact, setError }) {
   const [inputValue, setInputValue] = useState(contact);
 
   const contactVal = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     setInputValue(value);
     if (emailRegex.test(value) || phoneRegex.test(value)) {
       setError("");

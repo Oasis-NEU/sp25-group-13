@@ -13,6 +13,7 @@
   align-items: center;
   background-color: #d4f1f4;
   min-height: 100vh;
+  position: relative;
 }
 
 /* Banner */
@@ -23,18 +24,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .company-name {
   color: white;
   font-size: 2.5rem;
   font-weight: bold;
+  z-index: 2;
 }
 
 /* Profile Button (Top Right) */
 .profile-button {
-  max-width:80px;
-  max-height:60px;
+  max-width: 80px;
+  max-height: 60px;
   width: auto;
   height: auto;
   border-radius: 50%;
@@ -42,9 +46,10 @@
   top: 20px;
   right: 20px;
   border: 2px solid white;
+  z-index: 3;
 }
 
-/* post Button (Top Left) */
+/* Post Button (Top Left) */
 .post-button {
   width: 60px;
   height: 60px;
@@ -53,6 +58,7 @@
   top: 20px;
   left: 20px;
   border: 2px solid white;
+  z-index: 3;
 }
 
 /* Navigation Bar */
@@ -63,6 +69,7 @@
   width: 100%;
   padding: 15px;
   background-color: #189ab4;
+  z-index: 2;
 }
 
 .nav-bar a {
@@ -83,6 +90,7 @@
   margin-top: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
 h2 {
@@ -108,4 +116,15 @@ h2 {
   color: #05445e;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.post img {
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+  width: 100%;
 }

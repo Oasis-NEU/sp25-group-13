@@ -9,7 +9,7 @@ function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const plusSign = "https://cdn-icons-png.flaticon.com/512/7187/7187487.png"
+  const plusSign = "https://cdn-icons-png.flaticon.com/512/7187/7187487.png";
 
   useEffect(() => {
     if (user == null) {
@@ -21,18 +21,15 @@ function Home() {
 
   const fetchFeedPosts = async () => {
     try {
-      console.log(user)
-      //Gets posts from those followed artists
       const { data: postsData, error: postsError } = await supabase
         .from('Post')
         .select('*')
         .in('poster', user?.following)
-        .order('created_at', { ascending: false }); // Optional: show latest first
+        .order('created_at', { ascending: false });
 
       if (postsError) {
         console.error("Error fetching posts:", postsError.message);
       } else {
-        console.log("Fetched posts:", postsData);
         setPosts(postsData);
       }
     } catch (err) {
@@ -42,11 +39,6 @@ function Home() {
 
   return (
     <div className="home-container">
-      {/* Banner Section */}
-      <div className="banner">
-        <h1 className="company-name">Band4Band</h1>
-      </div>
-
       {/* Post Button (Top Left) - Only visible for artists */}
       {user?.artist && (
         <Link to="/post">
@@ -58,6 +50,11 @@ function Home() {
       <Link to="/profile">
         <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
       </Link>
+
+      {/* Banner Section */}
+      <div className="banner">
+        <h1 className="company-name">Band4Band</h1>
+      </div>
 
       {/* Navigation Bar */}
       <nav className="nav-bar">
