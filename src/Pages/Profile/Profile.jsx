@@ -26,8 +26,6 @@ const getEvents = async () => {
       .order('artists', { ascending: true });
 
     if (error) throw error;
-    console.log("Artist")
-    console.log(data)
     filteredEvents = data.filter(event => {
       return event.artists.includes(user?.id); 
     });
@@ -38,12 +36,11 @@ const getEvents = async () => {
       .order('attending', { ascending: true });
 
     if (error) throw error;
-    console.log("User: " + data)
-    console.log(data)
     filteredEvents = data.filter(event => {
       return event.attending.includes(user?.id); 
     });
     }
+    console.log(filteredEvents)
     setEvents(filteredEvents);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -66,7 +63,7 @@ const getEvents = async () => {
     } else {
       setAboutText(user?.bio)
     }
-    setEvents(getEvents);
+    getEvents();
 
   }, [user, navigate]);
 
@@ -100,10 +97,9 @@ const getEvents = async () => {
       try {
         setUploading(true);
         const fileName = `${Date.now()}_${image.name}`;
-      console.log(image)
-      console.log(fileName)
+
         // Upload the image to Supabase Storage
-        const { uploadData, uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('profilepictures')
           .upload(fileName, image);
 
@@ -113,27 +109,29 @@ const getEvents = async () => {
         }
 
         // Get the public URL of the uploaded image
-        const { publicURL, error: urlError } = supabase
+        const { data: publicURLData, error: urlError } = supabase
           .storage
           .from('profilepictures')
           .getPublicUrl(fileName);
-      console.log(publicURL)
+
         if (urlError) {
           throw urlError;
         }
 
-         // Update the user profile in the database with the new image URL
-        const { error: dbError } = await supabase
-          .from(table)
-          .update({ profile_picture: publicURL })
-          .eq('id', user.id); 
-
-        if (dbError) {
-          throw dbError;
+        const url = publicURLData.publicUrl;
+        if (url) {
+          setUploading(true);
+          const { data, error } = await supabase
+            .from(table)
+            .upsert({ id: user?.id, profile_picture: url });
+          if (error) {
+            throw new Error(error.message);
+          }
         }
+        setUploading(false);
         
-        alert('Upload successful! Image URL: ' + publicURL);
-        setImage(null); // Clear the preview after upload
+        alert('Upload successful!');
+        setImage(null); 
 
       } catch (uploadError) {
         alert('Error uploading file: ' + uploadError.message);

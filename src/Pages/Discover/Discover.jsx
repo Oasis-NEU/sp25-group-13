@@ -4,6 +4,7 @@ import { useAuth } from '../../AuthProvider.jsx';
 import { useEffect, useState } from 'react';  // Don't forget to import useState
 import profile from '../../assets/emptyprofile.jpg'; // Reuse profile image from Home
 import { supabase } from '../../supabaseClient.js';
+import { isAuthError } from '@supabase/supabase-js';
 
 function Discover() {
   const genres = [
@@ -131,7 +132,9 @@ function Discover() {
             return (
             <div className="band-card">
               <img src={artist.profile_picture || profile} alt={artist.username} />
-              <h3>{artist.username}</h3>
+              <Link to={`/account?account=${encodeURIComponent(artist.id)}`}>
+                {artist.username}
+              </Link>
               <p>{artist.genres}</p>
               <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
             </div>
