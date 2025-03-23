@@ -1,8 +1,7 @@
 import './Login.css'
 import { Link, useNavigate  } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-
-import { supabase } from "../../supabaseClient.js";
+import { supabase } from '../../supabaseClient.js';
 
 
 import bcrypt from 'bcryptjs';
