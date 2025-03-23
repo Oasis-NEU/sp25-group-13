@@ -60,7 +60,7 @@ function Profile() {
     setAboutText(user?.bio ?? "Tell us about yourself...");
     if (user?.genre) setGenre(user.genre);
 
-    setEvents(getEvents);
+    getEvents();
   }, [user, navigate]);
 
   // Update bio + genre
@@ -77,48 +77,63 @@ function Profile() {
     }
   };
 
-  // Set file on upload
+  //sets image to the uploaded file
   const handleUpload = (e) => {
     const file = e.target.files[0];
-    if (file) setImage(file);
-  };
+    if (file) {
+     setImage(file);
+    }
+  }
 
-  // Upload image to Supabase
+//uploads file to database
   const uploadImage = async () => {
     if (image) {
       try {
         setUploading(true);
         const fileName = `${Date.now()}_${image.name}`;
 
+        // Upload the image to Supabase Storage
         const { error: uploadError } = await supabase.storage
           .from('profilepictures')
           .upload(fileName, image);
 
-        if (uploadError) throw new Error(uploadError.message);
+        if (uploadError) {
+          console.error("upload error: ", uploadError.message)
+          throw new Error(uploadError.message);
+        }
 
-        const { publicURL, error: urlError } = supabase
+        // Get the public URL of the uploaded image
+        const { data: publicURLData, error: urlError } = supabase
           .storage
           .from('profilepictures')
           .getPublicUrl(fileName);
 
-        if (urlError) throw urlError;
+        if (urlError) {
+          throw urlError;
+        }
 
-        const { error: dbError } = await supabase
-          .from(table)
-          .update({ profile_picture: publicURL })
-          .eq('id', user.id);
+        const url = publicURLData.publicUrl;
+        if (url) {
+          setUploading(true);
+          const { data, error } = await supabase
+            .from(table)
+            .upsert({ id: user?.id, profile_picture: url });
+          if (error) {
+            throw new Error(error.message);
+          }
+        }
+        setUploading(false);
+        
+        alert('Upload successful!');
+        setImage(null); 
 
-        if (dbError) throw dbError;
-
-        alert('Upload successful! Image URL: ' + publicURL);
-        setImage(null);
       } catch (uploadError) {
         alert('Error uploading file: ' + uploadError.message);
       } finally {
         setUploading(false);
       }
-    }
-  };
+     }
+    };
 
   return (
     <div className="profile-container">
