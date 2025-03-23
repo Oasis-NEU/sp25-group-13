@@ -36,11 +36,11 @@ function Login() {
       .eq("username", cleanedUsername)
       .maybeSingle();
 
-    if (!fetchErrorContact) {
+    if (fetchErrorContact) {
       setMessage("This phone number/email is already registered.");
       setLoading(false);
       return;
-    } else if (!fetchErrorUser) {
+    } else if (fetchErrorUser) {
       setMessage("Username is already taken.");
       setLoading(false);
       return;
@@ -51,15 +51,15 @@ function Login() {
         password: hashedPassword,
         following: [],
         followers: [],
+        profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg",
+        bio: "",
       };
 
       if (table === "Artist Account") {
         insertData = {
           ...insertData,
-          profile_picture: "https://ycmiymyhtnehkjkyajqv.supabase.co/storage/v1/object/public/profilepictures//emptyprofile.jpg",
-          bio: "",
           artist: true,
-          genres: []
+          genres: [],
         };
       }
 
