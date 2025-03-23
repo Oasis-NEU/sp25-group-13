@@ -313,6 +313,7 @@ function Profile() {
         </div>
 
         {/* Posts */}
+        {user?.artist && (
       <div className="feed">
         <h2>Your Posts</h2>
         <div className="post-container">
@@ -329,8 +330,8 @@ function Profile() {
             ))
           )}
         </div>
-        <button onClick={() => navigate("/login")}>Log Out</button>
-    </div>
+    </div>)}
+    <button onClick={() => navigate("/login")}>Log Out</button>
   </div>
   );
 }

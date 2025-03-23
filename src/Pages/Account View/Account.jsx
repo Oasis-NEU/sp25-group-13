@@ -21,9 +21,19 @@ function Account() {
     const getAcct = async() => {
       const queryParams = new URLSearchParams(location.search);
       const acctParam = queryParams.get('account');
-      if (acctParam) {
+      const artistParam = queryParams.get('artist');
+
+      if (acctParam && artistParam) {
         const {data, error} = await supabase
         .from("Artist Account")
+        .select("*")
+        .eq("id", acctParam)
+        .single();
+        setAccount(data);
+      }
+      if (acctParam && !artistParam) {
+        const {data, error} = await supabase
+        .from("ListenerAccount")
         .select("*")
         .eq("id", acctParam)
         .single();
