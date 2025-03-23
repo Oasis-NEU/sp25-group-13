@@ -132,6 +132,11 @@ function CalendarPage() {
       <div className="paint-splatter"></div>
       <div className="paint-splatter layer2"></div>
 
+       {/* Profile Button (Top Right) */}
+       <Link to="/profile">
+              <img src={user?.profile_picture || profile} alt="Profile" className="profile-button" />
+            </Link>
+
       {/* Navigation */}
       <div className="banner">
         <h1 className="company-name">Band4Band</h1>
@@ -139,7 +144,6 @@ function CalendarPage() {
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
       </div>
