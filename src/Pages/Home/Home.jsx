@@ -21,31 +21,13 @@ function Home() {
 
   const fetchFeedPosts = async () => {
     try {
-      //Gets the artists this user is following
-      const { data: followingData, error: followingError } = await supabase
-        .from('Followers')
-        .select('followed_id')
-        .eq('follower_id', user.id);
-
-      if (followingError) {
-        console.error("Error fetching following list:", followingError.message);
-        return;
-      }
-
-      const followedArtistIds = followingData.map(follow => follow.followed_id);
-
-      if (followedArtistIds.length === 0) {
-        console.log("User is not following any artists yet.");
-        setPosts([]);
-        return;
-      }
-
+      console.log(user)
       //Gets posts from those followed artists
       const { data: postsData, error: postsError } = await supabase
         .from('Post')
         .select('*')
-        .in('poster', followedArtistIds)
-        .order('date', { ascending: false }); // Optional: show latest first
+        .in('poster', user?.following)
+        .order('created_at', { ascending: false }); // Optional: show latest first
 
       if (postsError) {
         console.error("Error fetching posts:", postsError.message);

@@ -21,6 +21,7 @@ function Discover() {
   const [artists, setArtists] = useState([]);
   const [displayArtists, setDisplayArtists] = useState([]);
   const [genre, setGenre] = useState("");
+  const [table, setTable] = useState("");
   const [search, setSearch] = useState("");
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -29,9 +30,12 @@ function Discover() {
   useEffect(() => {
     if (user == null) {
       navigate("/login");
+    } else if (user?.artist) {
+      setTable("Artist Account")
     } else {
-      getArtists();
+      setTable("ListenerAccount")
     }
+      getArtists();
   }, [user, navigate]);
 
   // Fetch artists based on selected genre
@@ -73,21 +77,25 @@ function Discover() {
   
       const currentFollowers = artistData.followers || [];
   
-      if (currentFollowers.includes(user.id)) {
-        console.log("You already follow this artist!");
-        return;
-      }
-  
       // 2. Update followers
       const updatedFollowers = [...currentFollowers, user.id];
+      const updatedFollowing = [...user.following, artist.id];
   
       const { error: updateArtistError } = await supabase
         .from("Artist Account")
-        .update({ followers: updatedFollowers })
-        .eq("id", artist.id);
+        .upsert({ id: artist?.id, followers: updatedFollowers});
+
+        const { error: updateFollowingError } = await supabase
+        .from(table)
+        .upsert({ id: user?.id, following: updatedFollowing});
   
       if (updateArtistError) {
         console.error("Update artist followers error:", updateArtistError);
+        return;
+      }
+
+      if (updateFollowingError) {
+        console.error("Update user following error:", updateFollowingError);
         return;
       }
   
@@ -176,6 +184,9 @@ function Discover() {
         <div className="band-grid">
         {Array.isArray(displayArtists) && displayArtists.length > 0 ? (
         displayArtists.map((artist) => {
+          if (user?.id == artist?.id) {
+            return;
+          } else {
             return (
             <div className="band-card">
               <img src={artist.profile_picture || profile} alt={artist.username} />
@@ -186,6 +197,7 @@ function Discover() {
               <button onClick={() => follow(artist)}>{user?.following.includes(artist.id) ? "Following" : "Follow"}</button>
             </div>
             );
+          }
           })
           
             ) :  (
