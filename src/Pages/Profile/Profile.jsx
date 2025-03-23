@@ -223,33 +223,27 @@ function Profile() {
         </button>
       </div>
 
-      <div className="events-section">
-        <h3>Your Events</h3>
-        {loading ? (
-          <p>Loading events...</p>
-        ) : events.length > 0 ? (
-          events.map((event) => {
-            const eventDate = new Date(event.date);
-            const whenString = eventDate.toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit', hour12: true,
-            });
-            return (
-              <div key={event.id} className="event-card">
-                <h3>{event.title}</h3>
-                <p>{event.location}</p>
-                <p>{whenString}</p>
-                <Link to={`/calendar?date=${encodeURIComponent(event.date)}`}>View Event</Link>
+        {/* Posts */}
+        {user?.artist && (
+      <div className="feed">
+        <h2>Your Posts</h2>
+        <div className="post-container">
+          {posts.length === 0 ? (
+            <p>No posts yet! Go to the home page to post!.</p>
+          ) : (
+            posts.map((post, index) => (
+              <div key={index} className="post">
+                <p>{post.bio}</p>
+                {post.media && post.media.map((url, idx) => (
+                  <img key={idx} src={url} alt={`Post ${index} Image ${idx}`} style={{ width: "100%", borderRadius: "10px" }} />
+                ))}
               </div>
-            );
-          })
-        ) : (
-          <p>No events available.</p>
-        )}
-      </div>
-
-      <button className="button" onClick={() => navigate("/login")}>Log Out</button>
-    </div>
+            ))
+          )}
+        </div>
+    </div>)}
+    <button onClick={() => navigate("/login")}>Log Out</button>
+  </div>
   );
 }
 
