@@ -161,11 +161,8 @@ function Discover() {
       <div className="nav-bar">
         <Link to="/home">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
         <Link to="/calendar">Calendar</Link>
         <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
       </div>
 
       {/* Discover Content */}

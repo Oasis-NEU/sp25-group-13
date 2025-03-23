@@ -141,17 +141,6 @@ function Login() {
         <h1 className="company-name">Band4Band</h1>
       </div>
 
-      {/* Navigation Bar */}
-      <div className="nav-bar">
-        <Link to="/home">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/account">Account</Link>
-        <Link to="/calendar">Calendar</Link>
-        <Link to="/discover">Discover</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
-      </div>
-
       {/* Tagline for extra sparkle */}
       <p className="login-tagline">“Your Front Row Seat to Local Music.”</p>
 
