@@ -85,23 +85,27 @@ function Post() {
   };
 
   const post = async () => {
-    const { data, error } = await supabase
-      .from("Post")
-      .insert([{
-        poster: user.id,
-        bio: bio,
-        likes: 0,
-        media: media,
-        comments: [],
-        date: selectedDate // Add date to the post
-      }]);
+    try {
+      const { data, error } = await supabase
+        .from("Post")
+        .insert([{
+          poster: user?.id,     // User ID of the person creating the post
+          bio: bio,             // Post content (bio/description)
+          likes: 0,             // Default like count is 0
+          media: media,         // Media associated with the post (URL, etc.)
+          comments: []         // No comments initially
+        }]);
 
-    if (error) {
-      setMessage(`Error: ${error.message}`);
-    } else {
-      setMessage("Posted successfully!");
-      fetchPosts(); // Fetch posts again to update the list
+      if (error) {
+        throw error; // If there is an error, throw it to be caught
+      }
+      console.log("Post created successfully:", data);
+      // Handle success (perhaps update UI or redirect)
+    } catch (error) {
+      setErrorMessage(error.message || "Something went wrong while creating the post.");
+      console.error("Error creating post:", error);
     }
+    navigate("/home")
   };
 
   const handleDateChange = (date, postId) => {
@@ -140,6 +144,7 @@ function Post() {
         <h1>Post Page</h1>
         <input type="file" className="imageInput" accept="image/*" onChange={handleUpload}></input>
         <button className="button" id="upload-button" onClick={uploadImage} disabled={uploading}>{uploading ? 'Uploading...' : '+'}</button>
+        <button className="button" id="post-button" onClick={post}>Post</button>
         
         <div className="uploaded-images">
           {media.map((url, index) => (
@@ -154,25 +159,7 @@ function Post() {
           onChange={(e) => setBio(e.target.value)}
         />
 
-        <button className="button" id="post-button" onClick={post}>Post</button>
-
-        {/* Display Posts */}
-        <div className="posts">
-          {posts.map((post, index) => (
-            <div key={index} className="post">
-              <p>{post.bio}</p>
-              {post.media.map((url, idx) => (
-                <img key={idx} src={url} alt={`Post ${index} Image ${idx}`} className="post-image" />
-              ))}
-              <input 
-                type="date" 
-                className="date-picker" 
-                value={post.date || ''} 
-                onChange={(e) => handleDateChange(e.target.value, post.id)} 
-              />
-            </div>
-          ))}
-        </div>
+        
       </div>
     </div>
   );
