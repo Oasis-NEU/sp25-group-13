@@ -282,7 +282,9 @@ function CalendarPage() {
                     src={account.profile_picture || "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}
                     alt={account.username}
                   />
-                  <p>{account.username}</p>
+                  <Link to={`/account?account=${encodeURIComponent(account.id)}`}>
+                {account.username}
+              </Link>
                 </div>
               </div>
             ))

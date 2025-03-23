@@ -17,7 +17,7 @@ function Login() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const {setUser} = useAuth();
+  const { setUser } = useAuth();
 
   // updates values on submit button press for listeners
   const handleCreate = async () => {
