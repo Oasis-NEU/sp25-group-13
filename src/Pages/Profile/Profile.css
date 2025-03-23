@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #d4f1f4; /* same light aqua as Home */
   justify-content: center;
   padding: 20px;
   background-color: #d4f1f4; /* light aqua, same as home background */
